@@ -1,2 +1,2 @@
 # Capstone-Group-1
-A WIP app for Capstone
+A WIP Shortcut Dock Desktop App for Capstone
