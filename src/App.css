@@ -1,0 +1,46 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/****************************** START OF NAVBAR STYLES ******************************/
+
+.navbar {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 20px;
+  min-height: 100vh;
+  background-color: rgb(17, 17, 17);
+  align-items: center;
+  position: fixed; 
+  left: 0; 
+  top: 0; 
+}
+
+
+/****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
+
+
+.main-content {
+  margin-left: 100px; 
+  width: calc(100% - 100px); 
+}
+
+/****************************** START OF SHORTCUTS PAGE STYLES ******************************/
+
+
+
+
+/****************************** START OF SETTINGS PAGE STYLES ******************************/
+
+
+
+
+/****************************** START OF PROFILE PAGE STYLES ******************************/
+
+
+
