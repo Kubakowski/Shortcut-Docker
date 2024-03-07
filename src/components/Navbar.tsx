@@ -9,6 +9,7 @@ function Navbar() {
       {/* Navigation Options */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <Link to="/shortcuts">Shortcuts</Link>
+        <Link to="/dock">Dock</Link>
         <Link to="/settings">Settings</Link>
       </div>
     </div>

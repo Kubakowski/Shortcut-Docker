@@ -21,26 +21,42 @@
   top: 0; 
 }
 
-
 /****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
-
 
 .main-content {
   margin-left: 100px; 
   width: calc(100% - 100px); 
 }
 
-/****************************** START OF SHORTCUTS PAGE STYLES ******************************/
+/****************************** START OF SHORTCUTS PAGE STYLES ****************************/
 
-
-
-
-/****************************** START OF SETTINGS PAGE STYLES ******************************/
-
-
-
+/****************************** START OF SETTINGS PAGE STYLES *****************************/
 
 /****************************** START OF PROFILE PAGE STYLES ******************************/
 
+/****************************** START OF DOCK PAGE STYLES ******************************/
+.dock-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px; /* Adjust based on your needs */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's above other content */
+}
 
+.dock-item {
+  margin: 0 10px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
 
+.dock-item:hover {
+  transform: scale(1.1); /* Simple preview effect */
+}
