@@ -16,7 +16,7 @@ function Shortcuts() {
   };
 
   // Function to remove a shortcut from the dock
-  const removeShortcut = (id) => {
+  const removeShortcut = (id: any) => {
     setShortcuts(shortcuts.filter(shortcut => shortcut.id !== id));
   };
 
