@@ -12,7 +12,8 @@ type Shortcut = {
 const firebaseConfig = {
   projectId: "shortcutdockerdb",
   messagingSenderId: "882887896750",
-  appId: "1:882887896750:web:71130e45c17483cd8bc73f"
+  appId: "1:882887896750:web:71130e45c17483cd8bc73f",
+  storageBucket: "gs://shortcutdockerdb.appspot.com"
 };
 
 const app = initializeApp(firebaseConfig);
