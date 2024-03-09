@@ -1,24 +1,93 @@
-import React, { useState } from 'react';
-import '../App.css';
+import { useState, useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+
+// Define the type of Shortcut
+type Shortcut = {
+  id: string;
+  action: string;
+  keys: string[];
+};
+
+const firebaseConfig = {
+  projectId: "shortcutdockerdb",
+  messagingSenderId: "882887896750",
+  appId: "1:882887896750:web:71130e45c17483cd8bc73f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 function Shortcuts() {
-  // State to keep track of shortcuts
-  const [shortcuts, setShortcuts] = useState([
-    { id: 1, name: "Ctrl + C: Copy" },
-    { id: 2, name: "Ctrl + V: Paste" },
-    { id: 3, name: "Ctrl + Z: Undo" }
-  ]);
+  const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [newAction, setNewAction] = useState<string>('');
+  const [newKeys, setNewKeys] = useState<string>('');
 
-  // Function to add a new shortcut to the dock
-  const addShortcut = () => {
-    const newShortcut = { id: Date.now(), name: `New Shortcut ${shortcuts.length + 1}` }; // Using Date.now() for a unique id
-    setShortcuts([...shortcuts, newShortcut]);
+  const fetchShortcuts = async () => {
+    try {
+      const shortcutsCollection = collection(db, "Shortcuts");
+      const snapshot = await getDocs(shortcutsCollection);
+      const fetchedShortcuts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Shortcut));
+      setShortcuts(fetchedShortcuts);
+      setError(null); // Clear any previous errors
+    } catch (error) {
+      console.error('Error fetching shortcuts:', error);
+      setError('Error fetching shortcuts');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Function to remove a shortcut from the dock
-  const removeShortcut = (id: any) => {
-    setShortcuts(shortcuts.filter(shortcut => shortcut.id !== id));
+  useEffect(() => {
+    fetchShortcuts();
+  }, []);
+
+  const generateId = (): string => {
+    // Generate a unique id using a timestamp
+    return Date.now().toString();
   };
+
+  const handleAddShortcut = async () => {
+    try {
+      const newShortcut: Shortcut = {
+        id: generateId(), // Generate unique id
+        action: newAction,
+        keys: newKeys.split(',').map(key => key.trim()) // Convert comma-separated keys to an array
+      };
+      await addDoc(collection(db, 'Shortcuts'), newShortcut);
+      setNewAction(''); // Clear the input fields after adding the shortcut
+      setNewKeys('');
+      await fetchShortcuts(); // Fetch shortcuts again after adding
+    } catch (error) {
+      console.error('Error adding shortcut:', error);
+      setError('Error adding shortcut');
+    }
+  };
+
+  const handleRemoveShortcut = async (shortcutId: string) => {
+    try {
+      await deleteDoc(doc(db, 'Shortcuts', shortcutId));
+      await fetchShortcuts(); // Fetch shortcuts again after removing
+    } catch (error) {
+      console.error('Error removing shortcut:', error);
+      setError('Error removing shortcut');
+    }
+  };
+
+  const handleRefresh = async () => {
+    setLoading(true); // Set loading state to true to indicate loading
+    await fetchShortcuts(); // Fetch shortcuts again
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="shortcutsContainer">
@@ -27,12 +96,21 @@ function Shortcuts() {
       <ul>
         {shortcuts.map((shortcut) => (
           <li key={shortcut.id}>
-            {shortcut.name}
-            <button onClick={() => removeShortcut(shortcut.id)} style={{marginLeft: '10px'}}>Remove</button>
+            {shortcut.action}
+            <button onClick={() => handleRemoveShortcut(shortcut.id)}>Remove</button>
           </li>
         ))}
       </ul>
-      <button onClick={addShortcut}>Add Shortcut to Dock</button>
+      <div>
+        <label>Action:</label>
+        <input type="text" value={newAction} onChange={(e) => setNewAction(e.target.value)} />
+      </div>
+      <div>
+        <label>Keys (comma-separated):</label>
+        <input type="text" value={newKeys} onChange={(e) => setNewKeys(e.target.value)} />
+      </div>
+      <button onClick={handleAddShortcut}>Add Shortcut</button>
+      <button onClick={handleRefresh}>Refresh</button> {/* Button to trigger refresh */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../App.css';
 
 function Profile() {
@@ -28,7 +28,7 @@ function Profile() {
   };
 
   // Function to handle profile picture change
-  const handleProfilePicChange = (e: any) => {
+  const handleProfilePicChange = (_e: any) => {
     // Logic to handle profile picture change
     console.log("Profile Picture Changed");
   };
