@@ -1,15 +1,19 @@
 import { Link } from 'react-router-dom';
+import profileIcon from "../assets/profile-icon.png"
+import pinIcon from "../assets/pin-icon.png"
+import customizeIcon from "../assets/customize-icon.png"
 
 function Navbar() {
   return (
-    <div className='navbar'>
-      {/* Profile Image as Link */}
-      <Link to="/profile"><img src="path/to/your/profile/image.jpg" alt="Profile" /></Link>
-
-      {/* Navigation Options */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <Link to="/shortcuts">Shortcuts</Link>
-        <Link to="/settings">Settings</Link>
+    <div className='navbar-wrapper'>
+      <div className='profile-wrapper'>
+        <Link to="/profile"><img src={profileIcon} alt="Profile" /></Link>
+      </div>
+      <div className='tabs-wrapper'>
+        <div className='nav-btn-wrapper'>
+          <Link to="/shortcuts"><img src={pinIcon} alt="Profile" /></Link>
+          <Link to="/settings"><img src={customizeIcon} alt="Profile" /></Link>
+        </div>
       </div>
     </div>
   );

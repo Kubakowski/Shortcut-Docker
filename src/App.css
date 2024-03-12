@@ -1,24 +1,105 @@
-#root {
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --background-color: #797979;
+  --nav-background-color: #2C3333;
+  --nav-background-color2: #394867;
+  --highlight-color: #018b92;
+  --text-color: #EEEEEE;
 }
+
+
+body {
+  margin: 0;
+  background-color: var(--background-color);
+}
+
+
+body.dark {
+  /* dark theme variables */
+  --background-color: #070F2B;
+}
+
+body.protanopia {
+  /* protanopia theme variables */
+  --background-color: #070F2B;
+}
+
+body.deuteranopia{
+  /* deuteranopia theme variables */
+  --background-color: #070F2B;
+}
+
+body.trianopia {
+  /* trianopia theme variables */
+  --background-color: #070F2B;
+}
+
 
 /****************************** START OF NAVBAR STYLES ******************************/
 
-.navbar {
-  width: 100px;
+.navbar-wrapper {
+  padding: 0;
+  width: 12%;
   display: flex;
   flex-direction: column;
   gap: 40px;
-  padding: 20px;
-  min-height: 100vh;
-  background-color: rgb(17, 17, 17);
+  height: 100vh;
+  background-color: var(--nav-background-color);
   align-items: center;
   position: fixed; 
+  border: 4px solid black;
+  border-right: 4px solid black; /* Added vertical divider */
   left: 0; 
   top: 0; 
+}
+
+.profile-wrapper {
+  height: 15%;
+  border-bottom: 4px solid;
+  box-sizing: border-box;
+  width: 100%; /* Ensure the profile wrapper takes full width */
+}
+
+.profile-wrapper img {
+  width: 70%;
+  height: 100%;
+}
+
+.tabs-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Make the tabs wrapper grow to fill available space */
+  width: 100%; /* Take the full width of its parent */
+}
+
+.nav-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Take up all available height */
+}
+
+.nav-btn-wrapper a {
+  flex: 1; /* Each link takes up equal space */
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+.nav-btn-wrapper a img {
+  width: auto; /* Adjust width proportionally */
+  height: 50%; /* Adjust height to be 70% of its parent, you can change this value */
+  width: 50%; /* Ensure the image is not wider than its container */
+  object-fit: contain; /* This will ensure the aspect ratio is maintained */
 }
 
 
