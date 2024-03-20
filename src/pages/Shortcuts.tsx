@@ -59,7 +59,7 @@ function Shortcuts() {
       const newShortcut: Shortcut = {
         id: generateId(), // Generate unique id
         action: newAction,
-        keys: newKeys.split(',').map(key => key.trim()) // Convert comma-separated keys to an array
+        keys: newKeys
       };
       await addDoc(collection(db, 'Shortcuts'), newShortcut);
       setNewAction(''); // Clear the input fields after adding the shortcut
