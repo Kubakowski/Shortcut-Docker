@@ -4,6 +4,16 @@ import pinIcon from "../assets/pin-icon.png";
 import settingsIcon from "../assets/settings-icon.png";
 
 function Navbar() {
+  return (
+    <div className='navbar' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      {/* Profile Image as Link */}
+      <Link to="/profile"><img src="path/to/your/profile/image.jpg" alt="Profile" /></Link>
+      
+      {/* Navigation Options */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+        <Link to="/shortcuts">Shortcuts</Link>
+        <Link to="/dock">Dock</Link>
+        <Link to="/settings">Settings</Link>
   const navigate = useNavigate();
 
   return (

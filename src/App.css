@@ -2,6 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   margin: 0 auto;
   text-align: center;
+  color: black; /* Set text color to black */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -43,6 +44,7 @@ body.trianopia {
 
 
 /****************************** START OF NAVBAR STYLES ******************************/
+/* Navbar styling */
 
 .navbar-wrapper {
   padding: 0;
@@ -124,17 +126,24 @@ body.trianopia {
   height: auto;
 }
 
-
-
-
 /****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
-
 
 .main-content {
   margin-left: 12%; 
   width: 88%; 
 }
 
+/****************************** START OF SHORTCUTS PAGE STYLES ****************************/
+
+.shortcutsContainer {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
 
 /****************************** START OF SHORTCUTS PAGE STYLES ******************************/
 
@@ -196,18 +205,113 @@ body.trianopia {
   border-radius: 10px; 
 }
 
+.shortcutsContainer h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: black; /* Set text color to black */
+}
 
+.shortcutsContainer p {
+  margin-bottom: 10px;
+  color: black; /* Set text color to black */
+}
 
+.shortcutsContainer ul {
+  list-style-type: none;
+  padding: 0;
+}
 
-/****************************** START OF SETTINGS PAGE STYLES ******************************/
+.shortcutsContainer li {
+  margin-bottom: 10px;
+  color: black; /* Set text color to black */
+}
 
+.shortcutsContainer input[type="text"] {
+  width: calc(100% - 20px); /* Reduce the width */
+  padding: 6px; /* Reduce padding */
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: black; /* Set text color to black */
+}
 
+.shortcutsContainer input[type="text"]::placeholder {
+  color: #808080;
+}
 
+.shortcutsContainer button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white; /* Set text color to white */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.shortcutsContainer button:hover {
+  background-color: #0056b3;
+}
+
+/****************************** START OF SETTINGS PAGE STYLES *****************************/
 
 /****************************** START OF PROFILE PAGE STYLES ******************************/
 
+/****************************** START OF DOCK PAGE STYLES ******************************/
 
+/* Dock container styling */
+.dock-container {
+  position: fixed;
+  top: 0;
+  left: 50%; /* Center the dock container horizontally */
+  width: calc(50% - 50px); /* Adjusted to be half the size of the viewport minus the width of the navbar */
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 1000; /* Ensure it's above other content */
+  transform: translateX(-50%); /* Center the dock container horizontally */
+}
 
+/* Window styling */
+.window {
+  width: 90%; /* Adjust the width as needed */
+  max-width: 800px; /* Add a max-width to prevent it from becoming too wide on larger screens */
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+/* Shortcuts container styling */
+.shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between; /* Ensure equal spacing between shortcuts */
+}
+
+/* Individual shortcut styling */
+.shortcut {
+  width: calc(33.33% - 10px); /* Adjusted width for 3 shortcuts per row with 10px gap */
+  height: 60px; /* Reduced height of the shortcut box */
+  padding: 5px; /* Reduced padding */
+  font-size: 0.75rem; /* Reduced font size */
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+  .shortcut {
+    width: calc(45% - 10px); /* Adjusted width for 2 shortcuts per row with 10px gap */
+  }
+  
 /****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
 
 

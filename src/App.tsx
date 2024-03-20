@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Profile from './pages/Profile'; 
 import Shortcuts from './pages/Shortcuts';
 import Settings from './pages/Settings';
+import Dock from './pages/Dock';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/profile" element={<Profile />} />
             <Route path="/shortcuts" element={<Shortcuts />} />
+            <Route path="/dock" element={<Dock />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </div>
