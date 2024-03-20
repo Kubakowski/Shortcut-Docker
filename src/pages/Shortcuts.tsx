@@ -18,6 +18,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+import '../App.css';
+import Shortcut from '../components/Shortcut';
+import Dock from '../components/Dock';
 
 function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
@@ -90,6 +93,10 @@ function Shortcuts() {
     return <div>Error: {error}</div>;
   }
 
+  const triggerComplexShortcut = () => {
+    window.electronAPI.send('trigger-shortcut', '^+!#l'); 
+  };
+
   return (
     <div className="shortcutsContainer">
       <h1>Shortcuts Page</h1>
@@ -112,6 +119,23 @@ function Shortcuts() {
       </div>
       <button onClick={handleAddShortcut}>Add Shortcut</button>
       <button onClick={handleRefresh}>Refresh</button> {/* Button to trigger refresh */}
+    <div className='shortcuts-page-wrapper'>
+      <div className='top-dock-wrapper'>
+        <Dock />
+      </div>
+      <hr className='shortcuts-divider' />
+      <div className='individual-shortcuts-wrapper'>
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+      </div>
     </div>
   );
 }

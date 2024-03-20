@@ -1,18 +1,23 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { MantineProvider } from '@mantine/core';
+import App from './App.jsx';
+import './App.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+// Assuming 'root' element exists
+const root = document.getElementById('root');
+if (root) {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <MantineProvider>
+        <App />
+      </MantineProvider>
+    </React.StrictMode>,
+  );
+}
 
-// Remove Preload scripts loading
-postMessage({ payload: 'removeLoading' }, '*')
-
-// Use contextBridge
 window.ipcRenderer.on('main-process-message', (_event, message) => {
-  console.log(message)
-})
+  console.log(message);
+});
+
+postMessage({ payload: 'removeLoading' }, '*');

@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "firebase": "^10.8.1",
+    "@mantine/core": "^7.6.2",
+    "@mantine/hooks": "^7.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
     "react-router-dom": "^6.22.1"
   },
   "devDependencies": {
@@ -22,12 +25,13 @@
     "@vitejs/plugin-react": "^4.0.4",
     "electron": "^26.1.0",
     "electron-builder": "^24.6.4",
+    "electron-rebuild": "^3.2.9",
     "eslint": "^8.48.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "vite-plugin-electron": "^0.14.0",
+    "vite-plugin-electron": "^0.14.1",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
   "main": "dist-electron/main.js"

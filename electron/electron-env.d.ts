@@ -25,3 +25,11 @@ declare namespace NodeJS {
 interface Window {
   ipcRenderer: import('electron').IpcRenderer
 }
+
+// Within a .d.ts file in your project
+interface Window {
+  electronAPI: {
+    triggerShortcut: () => void;
+    send: (channel: string, data: any) => void; // Add this line
+  };
+}
