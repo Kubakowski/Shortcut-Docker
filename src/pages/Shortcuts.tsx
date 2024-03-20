@@ -1,13 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
-
-// Define the type of Shortcut
-type Shortcut = {
-  id: string;
-  action: string;
-  keys: string[];
-};
+import '../App.css';
+import ShortcutComponent from '../components/Shortcut';
+import Dock from '../components/Dock';
 
 const firebaseConfig = {
   projectId: "shortcutdockerdb",
@@ -18,9 +14,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-import '../App.css';
-import Shortcut from '../components/Shortcut';
-import Dock from '../components/Dock';
+
+// Define the type of Shortcut
+type Shortcut = {
+  id: string;
+  action: string;
+  keys: string;
+};
 
 function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
@@ -28,6 +28,7 @@ function Shortcuts() {
   const [error, setError] = useState<string | null>(null);
   const [newAction, setNewAction] = useState<string>('');
   const [newKeys, setNewKeys] = useState<string>('');
+  const [pinnedShortcuts, setPinnedShortcuts] = useState<Shortcut[]>([]);
 
   const fetchShortcuts = async () => {
     try {
@@ -97,46 +98,46 @@ function Shortcuts() {
     window.electronAPI.send('trigger-shortcut', '^+!#l'); 
   };
 
+  const handlePinShortcut = (shortcut: Shortcut) => {
+    setPinnedShortcuts(prev => [...prev, shortcut]);
+  };
+
+  const handleUnpinShortcut = (shortcutId: string) => {
+    setPinnedShortcuts(prev => prev.filter(s => s.id !== shortcutId));
+  };
+
   return (
     <div className="shortcutsContainer">
       <h1>Shortcuts Page</h1>
-      <p>Here are some useful shortcuts:</p>
-      <ul>
-        {shortcuts.map((shortcut) => (
-          <li key={shortcut.id}>
-            {shortcut.action}
-            <button onClick={() => handleRemoveShortcut(shortcut.id)}>Remove</button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <label>Action:</label>
-        <input type="text" value={newAction} onChange={(e) => setNewAction(e.target.value)} />
-      </div>
-      <div>
-        <label>Keys (comma-separated):</label>
-        <input type="text" value={newKeys} onChange={(e) => setNewKeys(e.target.value)} />
-      </div>
-      <button onClick={handleAddShortcut}>Add Shortcut</button>
-      <button onClick={handleRefresh}>Refresh</button> {/* Button to trigger refresh */}
+      {/* ... other elements ... */}
+
       <div className='shortcuts-page-wrapper'>
         <div className='top-dock-wrapper'>
-          <Dock />
+          {/* Render pinned shortcuts */}
+          {pinnedShortcuts.map((shortcut) => (
+            <ShortcutComponent
+              key={shortcut.id}
+              action={shortcut.action}
+              keys={shortcut.keys}
+              onPin={() => { /* logic to handle re-pinning if needed */ }}
+              onUnpin={() => handleUnpinShortcut(shortcut.id)}
+              isPinned={true}
+            />
+          ))}
         </div>
         <hr className='shortcuts-divider' />
         <div className='individual-shortcuts-wrapper'>
-          {/* Assuming Shortcut is a component you want to render multiple times, make sure it's being used correctly. */}
-          {/* If these are placeholders for dynamic content, consider mapping over data as done with the shortcuts list. */}
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
-          <Shortcut />
+          {/* Render shortcuts that are not pinned */}
+          {shortcuts.filter(s => !pinnedShortcuts.some(p => p.id === s.id)).map((shortcut) => (
+           <ShortcutComponent
+             key={shortcut.id}
+             action={shortcut.action}
+             keys={shortcut.keys}
+             onPin={() => handlePinShortcut(shortcut)}
+             onUnpin={() => {}} // This needs a function, even if it's empty
+             isPinned={false} // This indicates the shortcut is not currently pinned
+           />
+          ))}
         </div>
       </div>
     </div>
