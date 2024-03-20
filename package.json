@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "firebase": "^10.8.1",
     "@mantine/core": "^7.6.2",
     "@mantine/hooks": "^7.6.2",
+    "firebase": "^10.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",

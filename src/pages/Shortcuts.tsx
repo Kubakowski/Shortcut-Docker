@@ -119,22 +119,25 @@ function Shortcuts() {
       </div>
       <button onClick={handleAddShortcut}>Add Shortcut</button>
       <button onClick={handleRefresh}>Refresh</button> {/* Button to trigger refresh */}
-    <div className='shortcuts-page-wrapper'>
-      <div className='top-dock-wrapper'>
-        <Dock />
-      </div>
-      <hr className='shortcuts-divider' />
-      <div className='individual-shortcuts-wrapper'>
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
-        <Shortcut />
+      <div className='shortcuts-page-wrapper'>
+        <div className='top-dock-wrapper'>
+          <Dock />
+        </div>
+        <hr className='shortcuts-divider' />
+        <div className='individual-shortcuts-wrapper'>
+          {/* Assuming Shortcut is a component you want to render multiple times, make sure it's being used correctly. */}
+          {/* If these are placeholders for dynamic content, consider mapping over data as done with the shortcuts list. */}
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+          <Shortcut />
+        </div>
       </div>
     </div>
   );

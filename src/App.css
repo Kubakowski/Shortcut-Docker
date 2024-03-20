@@ -311,7 +311,7 @@ body.trianopia {
   .shortcut {
     width: calc(45% - 10px); /* Adjusted width for 2 shortcuts per row with 10px gap */
   }
-  
+}
 /****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
 
 
