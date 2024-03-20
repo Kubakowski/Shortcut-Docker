@@ -1,8 +1,6 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -10,10 +8,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --background-color: #797979;
-  --nav-background-color: #2C3333;
+  --background-color: #9ea9e5;
+  --nav-background-color: #222161;
   --nav-background-color2: #394867;
-  --highlight-color: #018b92;
+  --highlight-color: #5852af;
   --text-color: #EEEEEE;
 }
 
@@ -22,7 +20,6 @@ body {
   margin: 0;
   background-color: var(--background-color);
 }
-
 
 body.dark {
   /* dark theme variables */
@@ -52,66 +49,152 @@ body.trianopia {
   width: 12%;
   display: flex;
   flex-direction: column;
-  gap: 40px;
   height: 100vh;
   background-color: var(--nav-background-color);
   align-items: center;
-  position: fixed; 
+  position: fixed;
   border: 4px solid black;
-  border-right: 4px solid black; /* Added vertical divider */
-  left: 0; 
-  top: 0; 
+  border-right: 4px solid black;
+  left: 0;
+  top: 0;
 }
 
 .profile-wrapper {
-  height: 15%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+  height: 18%;
   border-bottom: 4px solid;
   box-sizing: border-box;
-  width: 100%; /* Ensure the profile wrapper takes full width */
+  width: 100%;
 }
 
-.profile-wrapper img {
-  width: 70%;
-  height: 100%;
+.profile-wrapper button {
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+.profile-wrapper button img {
+  width: 80%;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .tabs-wrapper {
+  margin-top: 0;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Make the tabs wrapper grow to fill available space */
-  width: 100%; /* Take the full width of its parent */
+  flex-grow: 1;
+  width: 100%;
 }
 
 .nav-btn-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Take up all available height */
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
 }
 
-.nav-btn-wrapper a {
-  flex: 1; /* Each link takes up equal space */
+.nav-btn-wrapper button {
+  border: none;
+  cursor: pointer;
   display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  background-color: var(--highlight-color);
+  border: 3px solid black;
+  border-radius: 15px;
+  height: 30%;
+  width: 80%;
 }
 
-.nav-btn-wrapper a img {
-  width: auto; /* Adjust width proportionally */
-  height: 50%; /* Adjust height to be 70% of its parent, you can change this value */
-  width: 50%; /* Ensure the image is not wider than its container */
-  object-fit: contain; /* This will ensure the aspect ratio is maintained */
+.nav-btn-wrapper img {
+  width: 75%; 
+  height: auto;
 }
+
+
 
 
 /****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
 
 
 .main-content {
-  margin-left: 100px; 
-  width: calc(100% - 100px); 
+  margin-left: 12%; 
+  width: 88%; 
 }
 
+
 /****************************** START OF SHORTCUTS PAGE STYLES ******************************/
+
+.shortcuts-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  height: 100vh; 
+}
+
+.top-dock-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 1 35%; 
+  width: 100%; 
+}
+
+.individual-shortcuts-wrapper {
+  width: 100%; 
+  padding: 0 5%; 
+  box-sizing: border-box; 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  overflow-y: auto; 
+  max-height: 65%; 
+  margin-bottom: 1rem; 
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar-track {
+  background: #50505086;
+  border-radius: 10px;
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar-thumb {
+  background: rgb(59, 59, 59);
+  border-radius: 10px;
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+
+
+.shortcuts-divider {
+  background-color: black; 
+  border-color: black;
+  height: 4px; 
+  width: 90%;
+  margin: 1rem auto; 
+  border-radius: 10px; 
+}
 
 
 
@@ -125,3 +208,61 @@ body.trianopia {
 
 
 
+/****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
+
+
+.shortcut-wrapper {
+  border: 3px solid black;
+  height: 150px;
+  width: 300px;
+  background-color: rgb(59, 59, 59);
+  border-radius: 15px;
+}
+
+/****************************** START OF DOCK STYLES ******************************/
+
+.dock-wrapper {
+  border: 3px solid black;
+  min-height: 250px;
+  min-width: 450px;
+  background-color: rgb(59, 59, 59);
+  border-radius: 10px;
+}
+
+.dock-header {
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+}
+
+.dock-header-text {
+  align-self: center;
+  font-size: 24px;
+  color: var(--text-color);
+}
+
+.dock-arrow-left {
+  cursor: pointer;
+  background-color: rgb(59, 59, 59);
+  border-top: 0;
+  border-left: 0;
+  border-right: 3px solid black;
+  border-bottom: 3px solid black;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  height: 50px;
+  width: 50px;
+}
+
+.dock-arrow-right {
+  cursor: pointer;
+  background-color: rgb(59, 59, 59);
+  border-left: 3px solid black;
+  border-bottom: 3px solid black;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top: 0;
+  border-right: 0;
+  height: 50px;
+  width: 50px;
+}

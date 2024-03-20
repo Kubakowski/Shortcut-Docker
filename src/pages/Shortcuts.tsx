@@ -1,34 +1,31 @@
 import '../App.css';
+import Shortcut from '../components/Shortcut';
+import Dock from '../components/Dock';
 
 function Shortcuts() {
+
   const triggerComplexShortcut = () => {
-    window.electronAPI.send('trigger-shortcut', '^+!#l'); // Sends the AHK shortcut for opening LinkedIn
-  };
-
-  const triggerOpenFileExplorer = () => {
-    window.electronAPI.send('trigger-shortcut', '#e'); // Sends the AHK shortcut for opening File Explorer
-  };
-
-  const triggerOpenStartMenu = () => {
-    window.electronAPI.send('trigger-shortcut', '#'); // Sends the AHK shortcut for opening the Start menu
-  };
-
-  // You can create additional functions for other shortcuts
-  const triggerCopy = () => {
-    window.electronAPI.send('trigger-shortcut', '^c'); // Ctrl+C for copy
-  };
-
-  const triggerPaste = () => {
-    window.electronAPI.send('trigger-shortcut', '^v'); // Ctrl+V for paste
+    window.electronAPI.send('trigger-shortcut', '^+!#l'); 
   };
 
   return (
-    <div>
-      <button onClick={triggerComplexShortcut}>Go to Linked In</button>
-      <button onClick={triggerCopy}>Simulate Copy</button>
-      <button onClick={triggerPaste}>Simulate Paste</button>
-      <button onClick={triggerOpenFileExplorer}>Open File Explorer</button>
-      <button onClick={triggerOpenStartMenu}>Open Start Menu</button>
+    <div className='shortcuts-page-wrapper'>
+      <div className='top-dock-wrapper'>
+        <Dock />
+      </div>
+      <hr className='shortcuts-divider' />
+      <div className='individual-shortcuts-wrapper'>
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+        <Shortcut />
+      </div>
     </div>
   );
 }
