@@ -1,42 +1,42 @@
 import React, { useState } from 'react';
-import { AuthError, Auth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import {
+  Auth,
+  AuthError,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from 'firebase/auth';
 
 interface LoginPageProps {
   auth: Auth;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ auth }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // New state for success message
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const displaySuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
 
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Login successful, set success message
-      setSuccessMessage('Login successful!');
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 3000);
-    } catch (error: any) {
-      setError((error as AuthError).message || 'An unknown error occurred');
+      displaySuccessMessage('Login successful!');
+    } catch (error) {
+      const errorMessage = (error as AuthError).message || 'An unknown error occurred';
+      setError(errorMessage);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      // Google sign-in successful, set success message
-      setSuccessMessage('Google sign-in successful!');
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 3000);
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      displaySuccessMessage('Google sign-in successful!');
     } catch (error) {
-      console.error('Error signing in with Google:', error);
       setError('Error signing in with Google');
     }
   };
@@ -57,9 +57,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ auth }) => {
         <span>New user?</span>
         <button>Sign up</button>
       </div>
-      <button onClick={handleGoogleSignIn} style={{ marginTop: '20px', width: '200px', fontSize: '18px' }}>Sign in with Google</button>
+      <button onClick={handleGoogleSignIn} style={{ marginTop: '20px', width: '200px', fontSize: '18px' }}>
+        Sign in with Google
+      </button>
       {error && <div>{error}</div>}
-      {successMessage && <div>{successMessage}</div>} {/* Display success message */}
+      {successMessage && <div>{successMessage}</div>}
     </div>
   );
 };

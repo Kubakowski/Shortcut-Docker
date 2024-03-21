@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
-import '../App.css';
 import { db } from '../../firebaseInit';
+import '../App.css';
 
 type User = {
   dockConfig: string;
@@ -45,8 +45,8 @@ function Shortcuts() {
   const handleAddUser = async () => {
     try {
       await addDoc(collection(db, 'Users'), newUser);
-      fetchUsers(); // Refresh the user list after adding
-      setNewUser({ dockConfig: '', email: '', id: '', username: '' }); // Clear input fields
+      fetchUsers();
+      setNewUser({ dockConfig: '', email: '', id: '', username: '' });
     } catch (error) {
       console.error('Error adding user:', error);
       setError('Error adding user');

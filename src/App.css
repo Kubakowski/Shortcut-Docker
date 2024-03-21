@@ -1,50 +1,36 @@
+/************************************************** START OF STYLES **************************************************/
+
 :root {
+  /* Base font and core styles */
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  margin: 0 auto;
-  text-align: center;
-  color: black; /* Set text color to black */
-  font-synthesis: none;
+  color: black;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-
+  
+  /* Color scheme variables */
   --background-color: #9ea9e5;
   --nav-background-color: #222161;
-  --nav-background-color2: #394867;
   --highlight-color: #5852af;
   --text-color: #EEEEEE;
-}
 
+  /* Theme-specific background colors */
+  --dark-theme-background: #070F2B;
+}
 
 body {
   margin: 0;
   background-color: var(--background-color);
 }
 
-body.dark {
-  /* dark theme variables */
-  --background-color: #070F2B;
+/* Theme-specific overrides for body */
+body.dark, body.protanopia, body.deuteranopia, body.trianopia {
+  --background-color: var(--dark-theme-background);
 }
 
-body.protanopia {
-  /* protanopia theme variables */
-  --background-color: #070F2B;
-}
+/************************************************** START OF NAVBAR STYLES **************************************************/
 
-body.deuteranopia{
-  /* deuteranopia theme variables */
-  --background-color: #070F2B;
-}
-
-body.trianopia {
-  /* trianopia theme variables */
-  --background-color: #070F2B;
-}
-
-
-/****************************** START OF NAVBAR STYLES ******************************/
-/* Navbar styling */
 .navbar-wrapper {
   padding: 0;
   width: 12%;
@@ -55,7 +41,6 @@ body.trianopia {
   align-items: center;
   position: fixed;
   border: 4px solid black;
-  border-right: 4px solid black;
   left: 0;
   top: 0;
 }
@@ -66,15 +51,16 @@ body.trianopia {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px; /* Adjust margin for spacing between profile and login */
-  height: 9%; /* Adjusted height for profile and login */
-  border-bottom: 4px solid;
+  margin-bottom: 10px;
+  height: 9%;
+  border-bottom: 4px solid black;
   box-sizing: border-box;
   width: 100%;
 }
 
 .profile-wrapper button,
-.login-wrapper button {
+.login-wrapper button,
+.nav-btn-wrapper button {
   cursor: pointer;
   width: 100%;
   display: flex;
@@ -93,33 +79,24 @@ body.trianopia {
   object-fit: cover;
 }
 
-.tabs-wrapper {
-  margin-top: 0;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  width: 100%;
-}
-
+.tabs-wrapper,
 .nav-btn-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+}
+
+.nav-btn-wrapper {
   justify-content: space-around;
   height: 100%;
 }
 
 .nav-btn-wrapper button {
-  border: none;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
   background-color: var(--highlight-color);
   border: 3px solid black;
   border-radius: 15px;
-  height: 20%; /* Adjusted height for navigation buttons */
+  height: 20%;
   width: 80%;
 }
 
@@ -127,14 +104,21 @@ body.trianopia {
   width: 75%;
   height: auto;
 }
-/****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
+
+/************************************************** START OF MAIN CONTENT STYLES **************************************************/
 
 .main-content {
-  margin-left: 12%; 
-  width: 88%; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin-left: 12%;
+  width: 88%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/****************************** START OF SHORTCUTS PAGE STYLES ****************************/
+/************************************************** START OF SHORTCUTS PAGE STYLES **************************************************/
 
 .shortcutsContainer {
   font-family: Arial, sans-serif;
@@ -144,37 +128,41 @@ body.trianopia {
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   background-color: #ffffff;
+  color: black;
 }
-
-/****************************** START OF SHORTCUTS PAGE STYLES ******************************/
 
 .shortcuts-page-wrapper {
   display: flex;
   flex-direction: column;
   margin-top: 0;
-  height: 100vh; 
+  height: 100vh;
 }
 
 .top-dock-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 0 1 35%; 
-  width: 100%; 
+  flex: 0 1 35%;
+  width: 100%;
 }
 
 .individual-shortcuts-wrapper {
-  width: 100%; 
-  padding: 0 5%; 
-  box-sizing: border-box; 
+  width: 100%;
+  padding: 0 5%;
+  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  overflow-y: auto; 
-  max-height: 65%; 
-  margin-bottom: 1rem; 
+  overflow-y: auto;
+  max-height: 65%;
+  margin-bottom: 1rem;
+}
+
+/* Custom scrollbar styles */
+.individual-shortcuts-wrapper::-webkit-scrollbar {
+  width: 8px;
 }
 
 .individual-shortcuts-wrapper::-webkit-scrollbar-track {
@@ -191,60 +179,51 @@ body.trianopia {
   background: #555;
 }
 
-.individual-shortcuts-wrapper::-webkit-scrollbar {
-  width: 8px;
+.shortcuts-divider {
+  background-color: black;
+  height: 4px;
+  width: 90%;
+  margin: 1rem auto;
+  border-radius: 10px;
 }
 
-
-
-.shortcuts-divider {
-  background-color: black; 
-  border-color: black;
-  height: 4px; 
-  width: 90%;
-  margin: 1rem auto; 
-  border-radius: 10px; 
+/* Text elements within .shortcutsContainer for consistency */
+.shortcutsContainer h1,
+.shortcutsContainer p,
+.shortcutsContainer li {
+  margin-bottom: 10px;
 }
 
 .shortcutsContainer h1 {
   font-size: 24px;
   margin-bottom: 20px;
-  color: black; /* Set text color to black */
 }
 
-.shortcutsContainer p {
-  margin-bottom: 10px;
-  color: black; /* Set text color to black */
-}
-
+/* List styles */
 .shortcutsContainer ul {
   list-style-type: none;
   padding: 0;
 }
 
-.shortcutsContainer li {
-  margin-bottom: 10px;
-  color: black; /* Set text color to black */
-}
-
+/* Input styles */
 .shortcutsContainer input[type="text"] {
-  width: calc(100% - 20px); /* Reduce the width */
-  padding: 6px; /* Reduce padding */
+  width: calc(100% - 20px);
+  padding: 6px;
   margin-bottom: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   background-color: #ffffff;
-  color: black; /* Set text color to black */
 }
 
 .shortcutsContainer input[type="text"]::placeholder {
   color: #808080;
 }
 
+/* Button styles */
 .shortcutsContainer button {
   padding: 8px 16px;
   background-color: #007bff;
-  color: white; /* Set text color to white */
+  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -254,65 +233,65 @@ body.trianopia {
   background-color: #0056b3;
 }
 
-/****************************** START OF SETTINGS PAGE STYLES *****************************/
+/************************************************** START OF SETTINGS PAGE STYLES **************************************************/
 
-/****************************** START OF PROFILE PAGE STYLES ******************************/
+/************************************************** START OF PROFILE PAGE STYLES **************************************************/
 
+/* General input styles within .shortcutsContainer */
+.shortcutsContainer input[type="text"],
 .shortcutsContainer input[type="email"] {
-  width: calc(100% - 20px); /* Reduce the width */
-  padding: 6px; /* Reduce padding */
+  width: calc(100% - 20px);
+  padding: 6px;
   margin-bottom: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   background-color: #ffffff;
-  color: black; /* Set text color to black */
+  color: black;
 }
 
-.shortcutsContainer input[type="email"]::placeholder {
+/* Placeholder text color for inputs */
+.shortcutsContainer input::placeholder {
   color: #808080;
 }
 
 /****************************** START OF DOCK PAGE STYLES ******************************/
 
-/* Dock container styling */
+/* General dock container styling */
 .dock-container {
   position: fixed;
   top: 0;
-  left: 50%; /* Center the dock container horizontally */
-  width: calc(50% - 50px); /* Adjusted to be half the size of the viewport minus the width of the navbar */
+  left: 50%;
+  width: calc(50% - 50px);
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 1000; /* Ensure it's above other content */
-  transform: translateX(-50%); /* Center the dock container horizontally */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  transform: translateX(-50%);
 }
 
-/* Window styling */
 .window {
-  width: 90%; /* Adjust the width as needed */
-  max-width: 800px; /* Add a max-width to prevent it from becoming too wide on larger screens */
+  width: 90%;
+  max-width: 800px;
   padding: 20px;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   background-color: #ffffff;
 }
 
-/* Shortcuts container styling */
 .shortcuts {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: space-between; /* Ensure equal spacing between shortcuts */
+  justify-content: space-between;
 }
 
-/* Individual shortcut styling */
 .shortcut {
-  width: calc(33.33% - 10px); /* Adjusted width for 3 shortcuts per row with 10px gap */
-  height: 60px; /* Reduced height of the shortcut box */
-  padding: 5px; /* Reduced padding */
-  font-size: 0.75rem; /* Reduced font size */
+  width: calc(33.33% - 10px);
+  height: 60px;
+  padding: 5px;
+  font-size: 0.75rem;
   background-color: #f0f0f0;
   border-radius: 5px;
   text-align: center;
@@ -321,30 +300,27 @@ body.trianopia {
   justify-content: center;
 }
 
-/* Media query for smaller screens */
 @media (max-width: 600px) {
   .shortcut {
-    width: calc(45% - 10px); /* Adjusted width for 2 shortcuts per row with 10px gap */
+    width: calc(45% - 10px);
   }
 }
-/****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
 
-
-.shortcut-wrapper {
+.shortcut-wrapper,
+.dock-wrapper {
   border: 3px solid black;
-  height: 150px;
-  width: 300px;
   background-color: rgb(59, 59, 59);
   border-radius: 15px;
 }
 
-/****************************** START OF DOCK STYLES ******************************/
+.shortcut-wrapper {
+  height: 150px;
+  width: 300px;
+}
 
 .dock-wrapper {
-  border: 3px solid black;
   min-height: 250px;
   min-width: 450px;
-  background-color: rgb(59, 59, 59);
   border-radius: 10px;
 }
 
@@ -360,28 +336,21 @@ body.trianopia {
   color: var(--text-color);
 }
 
-.dock-arrow-left {
+.dock-arrow-left,
+.dock-arrow-right {
   cursor: pointer;
   background-color: rgb(59, 59, 59);
-  border-top: 0;
-  border-left: 0;
-  border-right: 3px solid black;
-  border-bottom: 3px solid black;
-  border-top-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border: 3px solid black;
   height: 50px;
   width: 50px;
 }
 
+.dock-arrow-left {
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
 .dock-arrow-right {
-  cursor: pointer;
-  background-color: rgb(59, 59, 59);
-  border-left: 3px solid black;
-  border-bottom: 3px solid black;
   border-top-right-radius: 10px;
   border-bottom-left-radius: 10px;
-  border-top: 0;
-  border-right: 0;
-  height: 50px;
-  width: 50px;
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import ShortcutComponent from '../components/Shortcut';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
+import ShortcutComponent from '../components/Shortcut';
 
 type Shortcut = {
   id: string;
@@ -41,7 +41,7 @@ function Shortcuts() {
     fetchShortcuts();
   }, []);
 
-/*
+/* Handlers for Adding and Removing Shortcuts from the Database
   const handleAddShortcut = async () => {
     try {
       const newShortcut: Shortcut = {
@@ -113,8 +113,8 @@ function Shortcuts() {
              action={shortcut.action}
              keys={shortcut.keys}
              onPin={() => handlePinShortcut(shortcut)}
-             onUnpin={() => {}} // This needs a function, even if it's empty
-             isPinned={false} // This indicates the shortcut is not currently pinned
+             onUnpin={() => {}}
+             isPinned={false}
            />
           ))}
         </div>
