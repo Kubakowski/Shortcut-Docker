@@ -30,6 +30,10 @@ function Navbar() {
           <button onClick={() => navigate("/settings")}>
             <img src={settingsIcon} alt="Settings" />
           </button>
+          {/* Button to navigate to login page */}
+          <button onClick={() => navigate("/login")}>
+            Login
+          </button>
         </div>
       </div>
     </div>

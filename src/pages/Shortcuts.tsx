@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import '../App.css';
+import { getFirestore, collection, addDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { firebaseConfig } from '../../firebaseConfig';
 import ShortcutComponent from '../components/Shortcut';
-import Dock from '../components/Dock';
-
-const firebaseConfig = {
-  projectId: "shortcutdockerdb",
-  messagingSenderId: "882887896750",
-  appId: "1:882887896750:web:71130e45c17483cd8bc73f",
-  storageBucket: "gs://shortcutdockerdb.appspot.com"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import { auth, db, app } from '../../firebaseInit';
 
 // Define the type of Shortcut
 type Shortcut = {
@@ -32,16 +23,21 @@ function Shortcuts() {
 
   const fetchShortcuts = async () => {
     try {
-      const shortcutsCollection = collection(db, "Shortcuts");
+      const shortcutsCollection = collection(db, 'Shortcuts');
       const snapshot = await getDocs(shortcutsCollection);
-      const fetchedShortcuts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Shortcut));
-      setShortcuts(fetchedShortcuts);
-      setError(null); // Clear any previous errors
+      const fetchedShortcuts = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          action: data.action || '', // Provide default values if necessary
+          keys: data.keys || '', // Provide default values if necessary
+        };
+      });
+      setShortcuts(fetchedShortcuts); // Set the fetched shortcuts in the state
+      setLoading(false); // Set loading to false after fetching shortcuts
     } catch (error) {
       console.error('Error fetching shortcuts:', error);
       setError('Error fetching shortcuts');
-    } finally {
-      setLoading(false);
     }
   };
 

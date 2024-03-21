@@ -45,7 +45,6 @@ body.trianopia {
 
 /****************************** START OF NAVBAR STYLES ******************************/
 /* Navbar styling */
-
 .navbar-wrapper {
   padding: 0;
   width: 12%;
@@ -61,19 +60,21 @@ body.trianopia {
   top: 0;
 }
 
-.profile-wrapper {
+.profile-wrapper,
+.login-wrapper {
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0;
-  height: 18%;
+  margin-bottom: 10px; /* Adjust margin for spacing between profile and login */
+  height: 9%; /* Adjusted height for profile and login */
   border-bottom: 4px solid;
   box-sizing: border-box;
   width: 100%;
 }
 
-.profile-wrapper button {
+.profile-wrapper button,
+.login-wrapper button {
   cursor: pointer;
   width: 100%;
   display: flex;
@@ -84,7 +85,8 @@ body.trianopia {
   padding: 0;
 }
 
-.profile-wrapper button img {
+.profile-wrapper button img,
+.login-wrapper button img {
   width: 80%;
   height: auto;
   border-radius: 50%;
@@ -117,15 +119,14 @@ body.trianopia {
   background-color: var(--highlight-color);
   border: 3px solid black;
   border-radius: 15px;
-  height: 30%;
+  height: 20%; /* Adjusted height for navigation buttons */
   width: 80%;
 }
 
 .nav-btn-wrapper img {
-  width: 75%; 
+  width: 75%;
   height: auto;
 }
-
 /****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
 
 .main-content {
