@@ -1,35 +1,48 @@
-/************************************************** START OF STYLES **************************************************/
-
 :root {
-  /* Base font and core styles */
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color: black;
+  margin: 0 auto;
+  text-align: center;
+  font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  
-  /* Color scheme variables */
+
   --background-color: #9ea9e5;
   --nav-background-color: #222161;
+  --nav-background-color2: #394867;
   --highlight-color: #5852af;
   --text-color: #EEEEEE;
-
-  /* Theme-specific background colors */
-  --dark-theme-background: #070F2B;
 }
+
 
 body {
   margin: 0;
   background-color: var(--background-color);
 }
 
-/* Theme-specific overrides for body */
-body.dark, body.protanopia, body.deuteranopia, body.trianopia {
-  --background-color: var(--dark-theme-background);
+body.dark {
+  /* dark theme variables */
+  --background-color: #070F2B;
 }
 
-/************************************************** START OF NAVBAR STYLES **************************************************/
+body.protanopia {
+  /* protanopia theme variables */
+  --background-color: #070F2B;
+}
+
+body.deuteranopia{
+  /* deuteranopia theme variables */
+  --background-color: #070F2B;
+}
+
+body.trianopia {
+  /* trianopia theme variables */
+  --background-color: #070F2B;
+}
+
+
+/****************************** START OF NAVBAR STYLES ******************************/
 
 .navbar-wrapper {
   padding: 0;
@@ -41,26 +54,24 @@ body.dark, body.protanopia, body.deuteranopia, body.trianopia {
   align-items: center;
   position: fixed;
   border: 4px solid black;
+  border-right: 4px solid black;
   left: 0;
   top: 0;
 }
 
-.profile-wrapper,
-.login-wrapper {
+.profile-wrapper {
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
-  height: 9%;
-  border-bottom: 4px solid black;
+  margin-bottom: 0;
+  height: 18%;
+  border-bottom: 4px solid;
   box-sizing: border-box;
   width: 100%;
 }
 
-.profile-wrapper button,
-.login-wrapper button,
-.nav-btn-wrapper button {
+.profile-wrapper button {
   cursor: pointer;
   width: 100%;
   display: flex;
@@ -71,98 +82,89 @@ body.dark, body.protanopia, body.deuteranopia, body.trianopia {
   padding: 0;
 }
 
-.profile-wrapper button img,
-.login-wrapper button img {
+.profile-wrapper button img {
   width: 80%;
   height: auto;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.tabs-wrapper,
-.nav-btn-wrapper {
+.tabs-wrapper {
+  margin-top: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex-grow: 1;
   width: 100%;
 }
 
 .nav-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: space-around;
   height: 100%;
 }
 
 .nav-btn-wrapper button {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
   background-color: var(--highlight-color);
   border: 3px solid black;
   border-radius: 15px;
-  height: 20%;
+  height: 30%;
   width: 80%;
 }
 
 .nav-btn-wrapper img {
-  width: 75%;
+  width: 75%; 
   height: auto;
 }
 
-/************************************************** START OF MAIN CONTENT STYLES **************************************************/
+
+
+
+/****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
+
 
 .main-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin-left: 12%;
-  width: 88%;
-  padding: 20px;
-  box-sizing: border-box;
+  margin-left: 12%; 
+  width: 88%; 
 }
 
-/************************************************** START OF SHORTCUTS PAGE STYLES **************************************************/
 
-.shortcutsContainer {
-  font-family: Arial, sans-serif;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-  background-color: #ffffff;
-  color: black;
-}
+/****************************** START OF SHORTCUTS PAGE STYLES ******************************/
 
 .shortcuts-page-wrapper {
   display: flex;
   flex-direction: column;
   margin-top: 0;
-  height: 100vh;
+  height: 100vh; 
 }
 
 .top-dock-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 0 1 35%;
-  width: 100%;
+  flex: 0 1 35%; 
+  width: 100%; 
 }
 
 .individual-shortcuts-wrapper {
-  width: 100%;
-  padding: 0 5%;
-  box-sizing: border-box;
+  width: 100%; 
+  padding: 0 5%; 
+  box-sizing: border-box; 
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  overflow-y: auto;
-  max-height: 65%;
-  margin-bottom: 1rem;
-}
-
-/* Custom scrollbar styles */
-.individual-shortcuts-wrapper::-webkit-scrollbar {
-  width: 8px;
+  overflow-y: auto; 
+  max-height: 65%; 
+  margin-bottom: 1rem; 
 }
 
 .individual-shortcuts-wrapper::-webkit-scrollbar-track {
@@ -179,148 +181,51 @@ body.dark, body.protanopia, body.deuteranopia, body.trianopia {
   background: #555;
 }
 
+.individual-shortcuts-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+
+
 .shortcuts-divider {
-  background-color: black;
-  height: 4px;
+  background-color: black; 
+  border-color: black;
+  height: 4px; 
   width: 90%;
-  margin: 1rem auto;
-  border-radius: 10px;
+  margin: 1rem auto; 
+  border-radius: 10px; 
 }
 
-/* Text elements within .shortcutsContainer for consistency */
-.shortcutsContainer h1,
-.shortcutsContainer p,
-.shortcutsContainer li {
-  margin-bottom: 10px;
-}
 
-.shortcutsContainer h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
 
-/* List styles */
-.shortcutsContainer ul {
-  list-style-type: none;
-  padding: 0;
-}
 
-/* Input styles */
-.shortcutsContainer input[type="text"] {
-  width: calc(100% - 20px);
-  padding: 6px;
-  margin-bottom: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  background-color: #ffffff;
-}
+/****************************** START OF SETTINGS PAGE STYLES ******************************/
 
-.shortcutsContainer input[type="text"]::placeholder {
-  color: #808080;
-}
 
-/* Button styles */
-.shortcutsContainer button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
-.shortcutsContainer button:hover {
-  background-color: #0056b3;
-}
 
-/************************************************** START OF SETTINGS PAGE STYLES **************************************************/
+/****************************** START OF PROFILE PAGE STYLES ******************************/
 
-/************************************************** START OF PROFILE PAGE STYLES **************************************************/
 
-/* General input styles within .shortcutsContainer */
-.shortcutsContainer input[type="text"],
-.shortcutsContainer input[type="email"] {
-  width: calc(100% - 20px);
-  padding: 6px;
-  margin-bottom: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  background-color: #ffffff;
-  color: black;
-}
 
-/* Placeholder text color for inputs */
-.shortcutsContainer input::placeholder {
-  color: #808080;
-}
+/****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
 
-/****************************** START OF DOCK PAGE STYLES ******************************/
 
-/* General dock container styling */
-.dock-container {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  width: calc(50% - 50px);
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  transform: translateX(-50%);
-}
-
-.window {
-  width: 90%;
-  max-width: 800px;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-  background-color: #ffffff;
-}
-
-.shortcuts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-between;
-}
-
-.shortcut {
-  width: calc(33.33% - 10px);
-  height: 60px;
-  padding: 5px;
-  font-size: 0.75rem;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@media (max-width: 600px) {
-  .shortcut {
-    width: calc(45% - 10px);
-  }
-}
-
-.shortcut-wrapper,
-.dock-wrapper {
+.shortcut-wrapper {
   border: 3px solid black;
+  height: 150px;
+  width: 300px;
   background-color: rgb(59, 59, 59);
   border-radius: 15px;
 }
 
-.shortcut-wrapper {
-  height: 150px;
-  width: 300px;
-}
+/****************************** START OF DOCK STYLES ******************************/
 
 .dock-wrapper {
+  border: 3px solid black;
   min-height: 250px;
   min-width: 450px;
+  background-color: rgb(59, 59, 59);
   border-radius: 10px;
 }
 
@@ -336,21 +241,28 @@ body.dark, body.protanopia, body.deuteranopia, body.trianopia {
   color: var(--text-color);
 }
 
-.dock-arrow-left,
-.dock-arrow-right {
+.dock-arrow-left {
   cursor: pointer;
   background-color: rgb(59, 59, 59);
-  border: 3px solid black;
+  border-top: 0;
+  border-left: 0;
+  border-right: 3px solid black;
+  border-bottom: 3px solid black;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   height: 50px;
   width: 50px;
 }
 
-.dock-arrow-left {
-  border-top-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
 .dock-arrow-right {
+  cursor: pointer;
+  background-color: rgb(59, 59, 59);
+  border-left: 3px solid black;
+  border-bottom: 3px solid black;
   border-top-right-radius: 10px;
   border-bottom-left-radius: 10px;
+  border-top: 0;
+  border-right: 0;
+  height: 50px;
+  width: 50px;
 }

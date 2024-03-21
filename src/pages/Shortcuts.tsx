@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
+import Dock from '../components/Dock';
 
 type Shortcut = {
   id: string;
@@ -86,13 +87,9 @@ function Shortcuts() {
   };
 
   return (
-    <div className="shortcutsContainer">
-      <h1>Shortcuts Page</h1>
-      {/* ... other elements ... */}
-
       <div className='shortcuts-page-wrapper'>
         <div className='top-dock-wrapper'>
-          {/* Render pinned shortcuts */}
+          <Dock />
           {pinnedShortcuts.map((shortcut) => (
             <ShortcutComponent
               key={shortcut.id}
@@ -119,7 +116,6 @@ function Shortcuts() {
           ))}
         </div>
       </div>
-    </div>
   );
 }
 

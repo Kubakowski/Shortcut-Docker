@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@mantine/core';
 
 type ShortcutComponentProps = {
   action: string;
@@ -14,10 +15,10 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, keys, onP
   <h3>{action}</h3>
   <p>{keys}</p>
   {isPinned && onUnpin && (
-    <button onClick={onUnpin}>Unpin</button>
+    <Button onClick={onUnpin}>Unpin</Button>
   )}
   {!isPinned && onPin && (
-    <button onClick={onPin}>Pin</button>
+    <Button onClick={onPin}>Pin</Button>
   )}
 </div>
   );
