@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import profileIcon from "../assets/profile-icon.png";
 import pinIcon from "../assets/pin-icon.png";

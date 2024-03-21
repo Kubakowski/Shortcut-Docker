@@ -1,44 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { Link } from 'react-router-dom'; // Assuming you're using React Router for navigation
+import { useState, useEffect } from 'react';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import '../App.css';
+import { db } from '../../firebaseInit';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAVz0msRmJji8Zcv0r5-tx-fW8IxTU1_rw",
-  authDomain: "shortcutdockerdb.firebaseapp.com",
-  projectId: "shortcutdockerdb",
-  storageBucket: "shortcutdockerdb.appspot.com",
-  messagingSenderId: "882887896750",
-  appId: "1:882887896750:web:71130e45c17483cd8bc73f",
-  measurementId: "G-PRQQ6ZT5Z0"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Define the type of User
 type User = {
+  dockConfig: string;
+  email: string;
   id: string;
   username: string;
-  email: string;
 };
 
 function Shortcuts() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [newUser, setNewUser] = useState<User>({
+    dockConfig: '',
+    email: '',
+    id: '',
+    username: '',
+  });
 
   const fetchUsers = async () => {
     try {
-      const usersCollection = collection(db, "Users");
+      const usersCollection = collection(db, 'Users');
       const snapshot = await getDocs(usersCollection);
-      const fetchedUsers: User[] = [];
-      snapshot.forEach(doc => {
-        fetchedUsers.push({ id: doc.id, ...doc.data() } as User);
-      });
+      const fetchedUsers = snapshot.docs.map(
+        doc => ({ id: doc.id, ...doc.data() } as User)
+      );
       setUsers(fetchedUsers);
-      setError(null); // Clear any previous errors
+      setError(null);
     } catch (error) {
       console.error('Error fetching users:', error);
       setError('Error fetching users');
@@ -50,6 +41,17 @@ function Shortcuts() {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const handleAddUser = async () => {
+    try {
+      await addDoc(collection(db, 'Users'), newUser);
+      fetchUsers(); // Refresh the user list after adding
+      setNewUser({ dockConfig: '', email: '', id: '', username: '' }); // Clear input fields
+    } catch (error) {
+      console.error('Error adding user:', error);
+      setError('Error adding user');
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -65,11 +67,43 @@ function Shortcuts() {
       {/* Render list of users */}
       <ul>
         {users.map(user => (
-          <li key={user.id}>
-            <Link to={`/profile/${user.id}`}>{user.username}</Link>
-          </li>
+          <li key={user.id}>{user.username}</li>
         ))}
       </ul>
+
+      {/* Form for adding a new user */}
+      <h2>Add User</h2>
+      <input
+        className="inputField"
+        type="text"
+        placeholder="Dock Config"
+        value={newUser.dockConfig}
+        onChange={e =>
+          setNewUser({ ...newUser, dockConfig: e.target.value })
+        }
+      />
+      <input
+        className="inputField"
+        type="email"
+        placeholder="Email"
+        value={newUser.email}
+        onChange={e => setNewUser({ ...newUser, email: e.target.value })}
+      />
+      <input
+        className="inputField"
+        type="text"
+        placeholder="ID"
+        value={newUser.id}
+        onChange={e => setNewUser({ ...newUser, id: e.target.value })}
+      />
+      <input
+        className="inputField"
+        type="text"
+        placeholder="Username"
+        value={newUser.username}
+        onChange={e => setNewUser({ ...newUser, username: e.target.value })}
+      />
+      <button onClick={handleAddUser}>Add User</button>
     </div>
   );
 }

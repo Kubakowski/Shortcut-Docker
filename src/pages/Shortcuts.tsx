@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { firebaseConfig } from '../../firebaseConfig';
 import ShortcutComponent from '../components/Shortcut';
-import { auth, db, app } from '../../firebaseInit';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebaseInit';
 
-// Define the type of Shortcut
 type Shortcut = {
   id: string;
   action: string;
@@ -17,8 +13,8 @@ function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [newAction, setNewAction] = useState<string>('');
-  const [newKeys, setNewKeys] = useState<string>('');
+  //const [newAction, setNewAction] = useState<string>('');
+  //const [newKeys, setNewKeys] = useState<string>('');
   const [pinnedShortcuts, setPinnedShortcuts] = useState<Shortcut[]>([]);
 
   const fetchShortcuts = async () => {
@@ -33,8 +29,8 @@ function Shortcuts() {
           keys: data.keys || '', // Provide default values if necessary
         };
       });
-      setShortcuts(fetchedShortcuts); // Set the fetched shortcuts in the state
-      setLoading(false); // Set loading to false after fetching shortcuts
+      setShortcuts(fetchedShortcuts);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching shortcuts:', error);
       setError('Error fetching shortcuts');
@@ -45,42 +41,33 @@ function Shortcuts() {
     fetchShortcuts();
   }, []);
 
-  const generateId = (): string => {
-    // Generate a unique id using a timestamp
-    return Date.now().toString();
-  };
-
+/*
   const handleAddShortcut = async () => {
     try {
       const newShortcut: Shortcut = {
-        id: generateId(), // Generate unique id
+        id: generateId(),
         action: newAction,
         keys: newKeys
       };
       await addDoc(collection(db, 'Shortcuts'), newShortcut);
-      setNewAction(''); // Clear the input fields after adding the shortcut
+      setNewAction('');
       setNewKeys('');
-      await fetchShortcuts(); // Fetch shortcuts again after adding
+      await fetchShortcuts();
     } catch (error) {
       console.error('Error adding shortcut:', error);
       setError('Error adding shortcut');
     }
   };
-
   const handleRemoveShortcut = async (shortcutId: string) => {
     try {
       await deleteDoc(doc(db, 'Shortcuts', shortcutId));
-      await fetchShortcuts(); // Fetch shortcuts again after removing
+      await fetchShortcuts();
     } catch (error) {
       console.error('Error removing shortcut:', error);
       setError('Error removing shortcut');
     }
   };
-
-  const handleRefresh = async () => {
-    setLoading(true); // Set loading state to true to indicate loading
-    await fetchShortcuts(); // Fetch shortcuts again
-  };
+*/
 
   if (loading) {
     return <div>Loading...</div>;
@@ -89,10 +76,6 @@ function Shortcuts() {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
-  const triggerComplexShortcut = () => {
-    window.electronAPI.send('trigger-shortcut', '^+!#l'); 
-  };
 
   const handlePinShortcut = (shortcut: Shortcut) => {
     setPinnedShortcuts(prev => [...prev, shortcut]);
