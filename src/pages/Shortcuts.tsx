@@ -3,11 +3,12 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
 import Dock from '../components/Dock';
+import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 
 type Shortcut = {
   id: string;
   action: string;
-  keys: string;
+  Keys: string;
 };
 
 function Shortcuts() {
@@ -16,7 +17,7 @@ function Shortcuts() {
   const [error, setError] = useState<string | null>(null);
   //const [newAction, setNewAction] = useState<string>('');
   //const [newKeys, setNewKeys] = useState<string>('');
-  const [pinnedShortcuts, setPinnedShortcuts] = useState<Shortcut[]>([]);
+  const { pinnedShortcuts, addPinnedShortcut, removePinnedShortcut } = usePinnedShortcuts();
 
   const fetchShortcuts = async () => {
     try {
@@ -26,8 +27,8 @@ function Shortcuts() {
         const data = doc.data();
         return {
           id: doc.id,
-          action: data.action || '', // Provide default values if necessary
-          keys: data.keys || '', // Provide default values if necessary
+          action: data.action || '',
+          Keys: data.Keys || '',
         };
       });
       setShortcuts(fetchedShortcuts);
@@ -48,7 +49,7 @@ function Shortcuts() {
       const newShortcut: Shortcut = {
         id: generateId(),
         action: newAction,
-        keys: newKeys
+        Keys: newKeys
       };
       await addDoc(collection(db, 'Shortcuts'), newShortcut);
       setNewAction('');
@@ -79,11 +80,11 @@ function Shortcuts() {
   }
 
   const handlePinShortcut = (shortcut: Shortcut) => {
-    setPinnedShortcuts(prev => [...prev, shortcut]);
+    addPinnedShortcut(shortcut); // Now using the context function directly
   };
-
+  
   const handleUnpinShortcut = (shortcutId: string) => {
-    setPinnedShortcuts(prev => prev.filter(s => s.id !== shortcutId));
+    removePinnedShortcut(shortcutId); // Now using the context function directly
   };
 
   return (
@@ -94,7 +95,7 @@ function Shortcuts() {
             <ShortcutComponent
               key={shortcut.id}
               action={shortcut.action}
-              keys={shortcut.keys}
+              Keys={shortcut.Keys}
               onPin={() => { /* logic to handle re-pinning if needed */ }}
               onUnpin={() => handleUnpinShortcut(shortcut.id)}
               isPinned={true}
@@ -108,7 +109,7 @@ function Shortcuts() {
            <ShortcutComponent
              key={shortcut.id}
              action={shortcut.action}
-             keys={shortcut.keys}
+             Keys={shortcut.Keys}
              onPin={() => handlePinShortcut(shortcut)}
              onUnpin={() => {}}
              isPinned={false}

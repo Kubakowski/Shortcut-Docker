@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@firebase/firestore": "^4.5.0",
     "@mantine/core": "^7.6.2",
     "@mantine/hooks": "^7.6.2",
     "firebase": "^10.8.1",
