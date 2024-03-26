@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, DocumentReference, DocumentData } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
 import '../App.css';
 
 type User = {
-  dockConfig: string;
+  dockConfig: DocumentReference<DocumentData> | null; // Initialize as null
   email: string;
   id: string;
   username: string;
@@ -15,7 +15,7 @@ function Shortcuts() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [newUser, setNewUser] = useState<User>({
-    dockConfig: '',
+    dockConfig: null, // Initialize as null
     email: '',
     id: '',
     username: '',
@@ -46,7 +46,7 @@ function Shortcuts() {
     try {
       await addDoc(collection(db, 'Users'), newUser);
       fetchUsers();
-      setNewUser({ dockConfig: '', email: '', id: '', username: '' });
+      setNewUser({ dockConfig: null, email: '', id: '', username: '' }); // Reset newUser state
     } catch (error) {
       console.error('Error adding user:', error);
       setError('Error adding user');
@@ -70,16 +70,16 @@ function Shortcuts() {
           <li key={user.id}>{user.username}</li>
         ))}
       </ul>
-
+  
       {/* Form for adding a new user */}
       <h2>Add User</h2>
       <input
         className="inputField"
         type="text"
         placeholder="Dock Config"
-        value={newUser.dockConfig}
+        value={newUser.dockConfig ? newUser.dockConfig.id : ''}
         onChange={e =>
-          setNewUser({ ...newUser, dockConfig: e.target.value })
+          setNewUser({ ...newUser, dockConfig: doc(db, 'docks', e.target.value) }) // Assuming the ID of the dock document is entered in the input field
         }
       />
       <input
@@ -104,8 +104,8 @@ function Shortcuts() {
         onChange={e => setNewUser({ ...newUser, username: e.target.value })}
       />
       <button onClick={handleAddUser}>Add User</button>
+      <button onClick={fetchUsers}>Refresh</button>
     </div>
   );
 }
-
 export default Shortcuts;
