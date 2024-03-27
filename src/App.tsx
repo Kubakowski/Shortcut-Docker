@@ -1,12 +1,13 @@
+// App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile'; 
 import Shortcuts from './pages/Shortcuts';
 import Settings from './pages/Settings';
-import LoginPage from './pages/Login';
 import { auth } from '../firebaseInit';
 import { PinnedShortcutsProvider } from '../PinnedShortcutsContext';
+import { SetStateAction } from 'react';
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
         <div className="main-content">
           <PinnedShortcutsProvider>
             <Routes>
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile" element={<Profile auth={auth} />} />
               <Route path="/shortcuts" element={<Shortcuts />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/login" element={<LoginPage auth={auth} />} /> {/* Route for LoginPage */}
+              <Route path="/settings" element={<Settings auth={undefined} setError={function (value: SetStateAction<string | null>): void {
+                throw new Error('Function not implemented.');
+              } } shortcutDocRef={undefined} />} />
             </Routes>
           </PinnedShortcutsProvider>
         </div>

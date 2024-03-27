@@ -1,17 +1,83 @@
-import { useState, ChangeEvent } from 'react';
+// Settings.tsx
+import React, { useState, ChangeEvent } from 'react';
+import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
+import { db } from '../../firebaseInit';
+import { setDoc, doc, getDoc } from 'firebase/firestore';
+import createDocumentReference from '../../createDocumentReference';
+
 import '../App.css';
 
 type Language = 'English' | 'Spanish' | 'French' | 'German';
 
-function Settings() {
+interface SettingsProps {
+  auth: any; // Replace 'any' with the correct type of auth
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+  shortcutDocRef: any; // Replace 'any' with the correct type of shortcutDocRef
+}
+
+function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [language, setLanguage] = useState<Language>('English');
+  const [dockFields, setDockFields] = useState({
+    color: '',
+    id: '',
+    orientation: '',
+    size: ''
+  });
+
+  const { pinnedShortcuts } = usePinnedShortcuts();
 
   const toggleNotifications = () => setNotificationsEnabled(prev => !prev);
   const toggleDarkMode = () => setDarkMode(prev => !prev);
   const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
+  };
+
+  const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setDockFields(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const fetchShortcutDoc = async () => {
+    try {
+      const docSnap = await getDoc(shortcutDocRef);
+      if (docSnap.exists()) {
+        const shortcutData = docSnap.data();
+        console.log('Shortcut document data:', shortcutData);
+      } else {
+        console.log('Shortcut document does not exist.');
+      }
+    } catch (error) {
+      console.error('Error fetching shortcut document:', error);
+    }
+  };
+
+  const exportDockConfig = async () => {
+    const shortcutsRefs = pinnedShortcuts.map(shortcut => createDocumentReference(db, 'Shortcuts', shortcut.id));
+
+    const dockConfigData = {
+      Color: dockFields.color,
+      ID: dockFields.id,
+      Orientation: dockFields.orientation,
+      Shortcuts: shortcutsRefs,
+      Size: dockFields.size,
+      exportedAt: new Date(),
+      field1: 'value1',
+      field2: 'value2',
+      userId: auth.currentUser ? auth.currentUser.uid : null,
+    };
+
+    try {
+      await setDoc(doc(db, 'Docks', 'userExportedConfig'), dockConfigData);
+      alert('Dock configuration exported successfully!');
+    } catch (error) {
+      console.error('Error exporting dock configuration:', error);
+      setError('Error exporting dock configuration');
+    }
   };
 
   return (
@@ -51,9 +117,30 @@ function Settings() {
           <option value="Spanish">Spanish</option>
           <option value="French">French</option>
           <option value="German">German</option>
-          {/* This pattern makes it easier to add or remove languages */}
         </select>
       </section>
+
+      {/* Dock Configuration */}
+      <div style={{ marginTop: '20px' }}>
+        <h2>Dock Configuration</h2>
+        <div>
+          <label>Color:</label>
+          <input type="text" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
+        </div>
+        <div>
+          <label>ID:</label>
+          <input type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
+        </div>
+        <div>
+          <label>Orientation:</label>
+          <input type="text" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
+        </div>
+        <div>
+          <label>Size:</label>
+          <input type="text" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
+        </div>
+        <button onClick={exportDockConfig}>Export Dock Configuration</button>
+      </div>
     </div>
   );
 }

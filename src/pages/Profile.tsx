@@ -1,6 +1,8 @@
+// Profile.tsx
 import { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, DocumentReference, DocumentData } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
+import { Auth, AuthError, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import '../App.css';
 
 type User = {
@@ -10,7 +12,7 @@ type User = {
   username: string;
 };
 
-function Shortcuts() {
+function Profile({ auth }: { auth: Auth }) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,6 +22,35 @@ function Shortcuts() {
     id: '',
     username: '',
   });
+
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const displaySuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      displaySuccessMessage('Login successful!');
+    } catch (error) {
+      const errorMessage = (error as AuthError).message || 'An unknown error occurred';
+      setLoginError(errorMessage);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      displaySuccessMessage('Google sign-in successful!');
+    } catch (error) {
+      setLoginError('Error signing in with Google');
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -70,7 +101,22 @@ function Shortcuts() {
           <li key={user.id}>{user.username}</li>
         ))}
       </ul>
-  
+
+      {/* Login Form */}
+      <h2>Login</h2>
+      <div>
+        <label>Email:</label>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      </div>
+      <div>
+        <label>Password:</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      </div>
+      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleGoogleSignIn}>Sign in with Google</button>
+      {loginError && <div>{loginError}</div>}
+      {successMessage && <div>{successMessage}</div>}
+
       {/* Form for adding a new user */}
       <h2>Add User</h2>
       <input
@@ -108,4 +154,4 @@ function Shortcuts() {
     </div>
   );
 }
-export default Shortcuts;
+export default Profile;
