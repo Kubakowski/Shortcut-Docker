@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// Shortcuts.tsx
+import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
@@ -7,15 +8,14 @@ import Dock from '../components/Dock';
 type Shortcut = {
   id: string;
   action: string;
-  keys: string;
+  Keys: string; // Adjusted to use "Keys" with capital "K"
+  execute: () => void; // Function to execute the action
 };
 
 function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  //const [newAction, setNewAction] = useState<string>('');
-  //const [newKeys, setNewKeys] = useState<string>('');
   const [pinnedShortcuts, setPinnedShortcuts] = useState<Shortcut[]>([]);
 
   const fetchShortcuts = async () => {
@@ -26,10 +26,16 @@ function Shortcuts() {
         const data = doc.data();
         return {
           id: doc.id,
-          action: data.action || '', // Provide default values if necessary
-          keys: data.keys || '', // Provide default values if necessary
+          action: data.action || '',
+          Keys: data.Keys || '', // Adjusted to use "Keys" with capital "K"
+          execute: () => {
+            console.log(`Executing action: ${data.action}`);
+            // Logic to execute the action based on the fetched data
+            // Add any other logic here
+          }
         };
       });
+      console.log('Fetched shortcuts:', fetchedShortcuts); // Log fetched shortcuts
       setShortcuts(fetchedShortcuts);
       setLoading(false);
     } catch (error) {
@@ -41,34 +47,6 @@ function Shortcuts() {
   useEffect(() => {
     fetchShortcuts();
   }, []);
-
-/* Handlers for Adding and Removing Shortcuts from the Database
-  const handleAddShortcut = async () => {
-    try {
-      const newShortcut: Shortcut = {
-        id: generateId(),
-        action: newAction,
-        keys: newKeys
-      };
-      await addDoc(collection(db, 'Shortcuts'), newShortcut);
-      setNewAction('');
-      setNewKeys('');
-      await fetchShortcuts();
-    } catch (error) {
-      console.error('Error adding shortcut:', error);
-      setError('Error adding shortcut');
-    }
-  };
-  const handleRemoveShortcut = async (shortcutId: string) => {
-    try {
-      await deleteDoc(doc(db, 'Shortcuts', shortcutId));
-      await fetchShortcuts();
-    } catch (error) {
-      console.error('Error removing shortcut:', error);
-      setError('Error removing shortcut');
-    }
-  };
-*/
 
   if (loading) {
     return <div>Loading...</div>;
@@ -87,35 +65,36 @@ function Shortcuts() {
   };
 
   return (
-      <div className='shortcuts-page-wrapper'>
-        <div className='top-dock-wrapper'>
-          <Dock />
-          {pinnedShortcuts.map((shortcut) => (
-            <ShortcutComponent
-              key={shortcut.id}
-              action={shortcut.action}
-              keys={shortcut.keys}
-              onPin={() => { /* logic to handle re-pinning if needed */ }}
-              onUnpin={() => handleUnpinShortcut(shortcut.id)}
-              isPinned={true}
-            />
-          ))}
-        </div>
-        <hr className='shortcuts-divider' />
-        <div className='individual-shortcuts-wrapper'>
-          {/* Render shortcuts that are not pinned */}
-          {shortcuts.filter(s => !pinnedShortcuts.some(p => p.id === s.id)).map((shortcut) => (
-           <ShortcutComponent
-             key={shortcut.id}
-             action={shortcut.action}
-             keys={shortcut.keys}
-             onPin={() => handlePinShortcut(shortcut)}
-             onUnpin={() => {}}
-             isPinned={false}
-           />
-          ))}
-        </div>
+    <div className='shortcuts-page-wrapper'>
+      <div className='top-dock-wrapper'>
+        <Dock />
+        {pinnedShortcuts.map((shortcut) => (
+          <ShortcutComponent
+            key={shortcut.id}
+            action={shortcut.action}
+            keys={shortcut.Keys} // Adjusted to use "Keys" with capital "K"
+            onPin={() => { /* logic to handle re-pinning if needed */ }}
+            onUnpin={() => handleUnpinShortcut(shortcut.id)}
+            isPinned={true}
+            onClick={() => shortcut.execute()} // Ensure execution here
+          />
+        ))}
       </div>
+      <hr className='shortcuts-divider' />
+      <div className='individual-shortcuts-wrapper'>
+        {shortcuts.filter(s => !pinnedShortcuts.some(p => p.id === s.id)).map((shortcut) => (
+          <ShortcutComponent
+            key={shortcut.id}
+            action={shortcut.action}
+            keys={shortcut.Keys} // Adjusted to use "Keys" with capital "K"
+            onPin={() => handlePinShortcut(shortcut)}
+            onUnpin={() => {}}
+            isPinned={false}
+            onClick={() => shortcut.execute()} // Ensure execution here
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
