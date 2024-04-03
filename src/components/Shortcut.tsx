@@ -1,10 +1,10 @@
-// ShortcutComponent.tsx
+//Shortcut.tsx
 import React from 'react';
 import { Button } from '@mantine/core';
 
 type ShortcutComponentProps = {
   action: string;
-  keys: string; // Ensure consistency in prop naming
+  Keys: string;
   onPin: () => void;
   onUnpin: () => void;
   isPinned: boolean;
@@ -21,9 +21,11 @@ const triggerShortcut = (keys: string) => {
   }, 500); 
 };
 
-const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, keys, onPin, onUnpin, isPinned, onClick }) => {
+
+const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, Keys, onPin, onUnpin, isPinned, onClick}) => {
+
   const handleDoClick = () => {
-    triggerShortcut(keys);
+    triggerShortcut(Keys);
     console.log('Do button clicked'); // Log a message to verify button click
     onClick(); // Call the provided onClick function
   };
@@ -31,7 +33,7 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, keys, onP
   return (
     <div className='shortcut-wrapper'>
       <h3>{action}</h3>
-      <p>{keys}</p>
+      <p>{Keys}</p>
       <Button onClick={handleDoClick}>Execute</Button>
       {isPinned && onUnpin && (
         <Button onClick={onUnpin}>Unpin</Button>

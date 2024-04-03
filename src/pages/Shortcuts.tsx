@@ -9,15 +9,14 @@ import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 type Shortcut = {
   id: string;
   action: string;
-  Keys: string; // Maintaining "Keys" with capital "K"
-  execute: () => void; // Function to execute the action
+  Keys: string; // Adjusted to use "Keys" with capital "K"
+  execute: () => void;
 };
 
 function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  // Utilizing the context for managing pinned shortcuts but keeping the potential for local state manipulation
   const { pinnedShortcuts, addPinnedShortcut, removePinnedShortcut } = usePinnedShortcuts();
 
   const fetchShortcuts = async () => {
@@ -29,12 +28,10 @@ function Shortcuts() {
         return {
           id: doc.id,
           action: data.action || '',
-          Keys: data.Keys || '', // Consistent use of "Keys" with capital "K"
+          Keys: data.Keys || '',
           execute: () => {
             console.log(`Executing action: ${data.action}`);
-            // Placeholder for logic to execute the action
-            // Future implementation can be added here
-          },
+          }
         };
       });
       console.log('Fetched shortcuts:', fetchedShortcuts);
@@ -75,10 +72,10 @@ function Shortcuts() {
             key={shortcut.id}
             action={shortcut.action}
             Keys={shortcut.Keys}
-            onPin={() => handlePinShortcut(shortcut)}
+            onPin={() => { /* logic to handle re-pinning if needed */ }}
             onUnpin={() => handleUnpinShortcut(shortcut.id)}
             isPinned={true}
-            onClick={shortcut.execute} // Using the execute function
+            onClick={() => shortcut.execute()}
           />
         ))}
       </div>
@@ -92,7 +89,7 @@ function Shortcuts() {
             onPin={() => handlePinShortcut(shortcut)}
             onUnpin={() => {}}
             isPinned={false}
-            onClick={shortcut.execute} // Using the execute function for non-pinned shortcuts as well
+            onClick={() => shortcut.execute()}
           />
         ))}
       </div>
