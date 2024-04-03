@@ -4,11 +4,12 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
 import Dock from '../components/Dock';
+import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 
 type Shortcut = {
   id: string;
   action: string;
-  Keys: string; // Adjusted to use "Keys" with capital "K"
+  Keys: string; // Maintaining "Keys" with capital "K"
   execute: () => void; // Function to execute the action
 };
 
@@ -16,7 +17,8 @@ function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [pinnedShortcuts, setPinnedShortcuts] = useState<Shortcut[]>([]);
+  // Utilizing the context for managing pinned shortcuts but keeping the potential for local state manipulation
+  const { pinnedShortcuts, addPinnedShortcut, removePinnedShortcut } = usePinnedShortcuts();
 
   const fetchShortcuts = async () => {
     try {
@@ -27,15 +29,15 @@ function Shortcuts() {
         return {
           id: doc.id,
           action: data.action || '',
-          Keys: data.Keys || '', // Adjusted to use "Keys" with capital "K"
+          Keys: data.Keys || '', // Consistent use of "Keys" with capital "K"
           execute: () => {
             console.log(`Executing action: ${data.action}`);
-            // Logic to execute the action based on the fetched data
-            // Add any other logic here
-          }
+            // Placeholder for logic to execute the action
+            // Future implementation can be added here
+          },
         };
       });
-      console.log('Fetched shortcuts:', fetchedShortcuts); // Log fetched shortcuts
+      console.log('Fetched shortcuts:', fetchedShortcuts);
       setShortcuts(fetchedShortcuts);
       setLoading(false);
     } catch (error) {
@@ -57,11 +59,11 @@ function Shortcuts() {
   }
 
   const handlePinShortcut = (shortcut: Shortcut) => {
-    setPinnedShortcuts(prev => [...prev, shortcut]);
+    addPinnedShortcut(shortcut);
   };
-
+  
   const handleUnpinShortcut = (shortcutId: string) => {
-    setPinnedShortcuts(prev => prev.filter(s => s.id !== shortcutId));
+    removePinnedShortcut(shortcutId);
   };
 
   return (
@@ -72,11 +74,11 @@ function Shortcuts() {
           <ShortcutComponent
             key={shortcut.id}
             action={shortcut.action}
-            keys={shortcut.Keys} // Adjusted to use "Keys" with capital "K"
-            onPin={() => { /* logic to handle re-pinning if needed */ }}
+            Keys={shortcut.Keys}
+            onPin={() => handlePinShortcut(shortcut)}
             onUnpin={() => handleUnpinShortcut(shortcut.id)}
             isPinned={true}
-            onClick={() => shortcut.execute()} // Ensure execution here
+            onClick={shortcut.execute} // Using the execute function
           />
         ))}
       </div>
@@ -86,11 +88,11 @@ function Shortcuts() {
           <ShortcutComponent
             key={shortcut.id}
             action={shortcut.action}
-            keys={shortcut.Keys} // Adjusted to use "Keys" with capital "K"
+            Keys={shortcut.Keys}
             onPin={() => handlePinShortcut(shortcut)}
             onUnpin={() => {}}
             isPinned={false}
-            onClick={() => shortcut.execute()} // Ensure execution here
+            onClick={shortcut.execute} // Using the execute function for non-pinned shortcuts as well
           />
         ))}
       </div>

@@ -4,7 +4,7 @@ import { Button } from '@mantine/core';
 
 type ShortcutComponentProps = {
   action: string;
-  keys: string; // keys is now a string, not an array
+  keys: string; // Ensure consistency in prop naming
   onPin: () => void;
   onUnpin: () => void;
   isPinned: boolean;
@@ -21,9 +21,7 @@ const triggerShortcut = (keys: string) => {
   }, 500); 
 };
 
-
-const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, keys, onPin, onUnpin, isPinned, onClick}) => {
-
+const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, keys, onPin, onUnpin, isPinned, onClick }) => {
   const handleDoClick = () => {
     triggerShortcut(keys);
     console.log('Do button clicked'); // Log a message to verify button click

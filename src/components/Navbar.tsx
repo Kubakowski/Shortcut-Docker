@@ -15,7 +15,6 @@ function Navbar() {
           <img src={profileIcon} alt="Profile" />
         </Button>
       </div>
-
       {/* Navigation Options */}
       <div className='tabs-wrapper'>
         <div className='nav-btn-wrapper' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
@@ -24,9 +23,6 @@ function Navbar() {
           </Button>
           <Button onClick={() => navigate("/settings")}>
             <img src={settingsIcon} alt="Settings" />
-          </Button>
-          <Button onClick={() => navigate("/login")}>
-            Login
           </Button>
         </div>
       </div>
