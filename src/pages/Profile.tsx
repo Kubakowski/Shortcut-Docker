@@ -1,25 +1,56 @@
+// Profile.tsx
 import { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, DocumentReference, DocumentData } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
+import { Auth, AuthError, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import '../App.css';
 
 type User = {
-  dockConfig: string;
+  dockConfig: DocumentReference<DocumentData> | null; // Initialize as null
   email: string;
   id: string;
   username: string;
 };
 
-function Shortcuts() {
+function Profile({ auth }: { auth: Auth }) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [newUser, setNewUser] = useState<User>({
-    dockConfig: '',
+    dockConfig: null, // Initialize as null
     email: '',
     id: '',
     username: '',
   });
+
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const displaySuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      displaySuccessMessage('Login successful!');
+    } catch (error) {
+      const errorMessage = (error as AuthError).message || 'An unknown error occurred';
+      setLoginError(errorMessage);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      displaySuccessMessage('Google sign-in successful!');
+    } catch (error) {
+      setLoginError('Error signing in with Google');
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -46,7 +77,7 @@ function Shortcuts() {
     try {
       await addDoc(collection(db, 'Users'), newUser);
       fetchUsers();
-      setNewUser({ dockConfig: '', email: '', id: '', username: '' });
+      setNewUser({ dockConfig: null, email: '', id: '', username: '' }); // Reset newUser state
     } catch (error) {
       console.error('Error adding user:', error);
       setError('Error adding user');
@@ -71,15 +102,30 @@ function Shortcuts() {
         ))}
       </ul>
 
+      {/* Login Form */}
+      <h2>Login</h2>
+      <div>
+        <label>Email:</label>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      </div>
+      <div>
+        <label>Password:</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      </div>
+      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleGoogleSignIn}>Sign in with Google</button>
+      {loginError && <div>{loginError}</div>}
+      {successMessage && <div>{successMessage}</div>}
+
       {/* Form for adding a new user */}
       <h2>Add User</h2>
       <input
         className="inputField"
         type="text"
         placeholder="Dock Config"
-        value={newUser.dockConfig}
+        value={newUser.dockConfig ? newUser.dockConfig.id : ''}
         onChange={e =>
-          setNewUser({ ...newUser, dockConfig: e.target.value })
+          setNewUser({ ...newUser, dockConfig: doc(db, 'docks', e.target.value) }) // Assuming the ID of the dock document is entered in the input field
         }
       />
       <input
@@ -104,8 +150,8 @@ function Shortcuts() {
         onChange={e => setNewUser({ ...newUser, username: e.target.value })}
       />
       <button onClick={handleAddUser}>Add User</button>
+      <button onClick={fetchUsers}>Refresh</button>
     </div>
   );
 }
-
-export default Shortcuts;
+export default Profile;

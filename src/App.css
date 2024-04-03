@@ -206,7 +206,18 @@ body.trianopia {
 
 /****************************** START OF PROFILE PAGE STYLES ******************************/
 
+.shortcuts-container {
+  display: flex;
+  flex-direction: column;
+}
 
+.add-user-section {
+  margin-bottom: 20px;
+}
+
+.login-section {
+  margin-top: 20px;
+}
 
 /****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
 
