@@ -4,11 +4,7 @@ import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db } from '../../firebaseInit';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
-
-
 import '../App.css';
-
-type Language = 'English' | 'Spanish' | 'French' | 'German';
 
 interface SettingsProps {
   auth: any; // Replace 'any' with the correct type of auth
@@ -17,12 +13,10 @@ interface SettingsProps {
 }
 
 function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
-  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
   // Correctly initialized useState hook for darkMode
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
   });
-  const [language, setLanguage] = useState<Language>('English');
   const [dockFields, setDockFields] = useState({
     color: '',
     id: '',
@@ -52,13 +46,7 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
     localStorage.setItem('darkMode', darkMode.toString());
   }, [darkMode]);
 
-  const toggleNotifications = () => setNotificationsEnabled(prev => !prev);
-  const toggleDarkMode = () => {
-    setDarkMode(prev => !prev);
-  };
-  const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value as Language);
-  };
+  const toggleDarkMode = () => {setDarkMode(prev => !prev);};
 
   const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -121,29 +109,11 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
       </section>
 
       <section>
-        <h2>Notifications</h2>
-        <label>
-          Enable Notifications
-          <input type="checkbox" checked={notificationsEnabled} onChange={toggleNotifications} />
-        </label>
-      </section>
-
-      <section>
         <h2>Appearance</h2>
         <label>
           Dark Mode
           <input type="checkbox" checked={darkMode} onChange={toggleDarkMode} />
         </label>
-      </section>
-
-      <section>
-        <h2>Language</h2>
-        <select value={language} onChange={handleLanguageChange}>
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-        </select>
       </section>
 
       {/* Dock Configuration */}
