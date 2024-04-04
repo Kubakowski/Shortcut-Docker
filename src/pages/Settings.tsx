@@ -1,9 +1,10 @@
 // Settings.tsx
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db } from '../../firebaseInit';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
+
 
 import '../App.css';
 
@@ -17,7 +18,10 @@ interface SettingsProps {
 
 function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  // Correctly initialized useState hook for darkMode
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
   const [language, setLanguage] = useState<Language>('English');
   const [dockFields, setDockFields] = useState({
     color: '',
@@ -28,8 +32,30 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
 
   const { pinnedShortcuts } = usePinnedShortcuts();
 
+  useEffect(() => {
+    // Toggle dark mode class on body element
+    if (darkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    // Retrieve dark mode preference from local storage
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(isDarkMode);
+  }, []);
+
+  useEffect(() => {
+    // Persist dark mode preference in local storage
+    localStorage.setItem('darkMode', darkMode.toString());
+  }, [darkMode]);
+
   const toggleNotifications = () => setNotificationsEnabled(prev => !prev);
-  const toggleDarkMode = () => setDarkMode(prev => !prev);
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev);
+  };
   const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
   };
