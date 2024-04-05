@@ -6,9 +6,13 @@ import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 
 import '../App.css';
+import { win } from '../../electron/main.ts';
+
+function toggleOnTop() {
+  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
+}
 
 type Language = 'English' | 'Spanish' | 'French' | 'German';
-
 interface SettingsProps {
   auth: any; // Replace 'any' with the correct type of auth
   setError: React.Dispatch<React.SetStateAction<string | null>>;
@@ -30,6 +34,9 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
 
   const toggleNotifications = () => setNotificationsEnabled(prev => !prev);
   const toggleDarkMode = () => setDarkMode(prev => !prev);
+  const toggleAlwaysOnTop = () => {
+    toggleOnTop();
+  };
   const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
   };
@@ -112,7 +119,7 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
 
       <section>
         <h2>Language</h2>
-        <select value={language} onChange={handleLanguageChange}>
+        <select title="Language" value={language} onChange={handleLanguageChange}>
           <option value="English">English</option>
           <option value="Spanish">Spanish</option>
           <option value="French">French</option>
@@ -120,29 +127,41 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
         </select>
       </section>
 
+      <section>
+        <h2>Always on Top</h2>
+        <label>Keeps the dock open and on top while focused on other pages</label>
+        <label className="switch">
+           <input title="Always on Top" type="checkbox" onChange={toggleAlwaysOnTop} />
+           <span className="slider round"></span>
+        </label>
+      </section>
+
       {/* Dock Configuration */}
       <div style={{ marginTop: '20px' }}>
         <h2>Dock Configuration</h2>
         <div>
           <label>Color:</label>
-          <input type="text" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
+          <input title="Color" type="text" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
         </div>
         <div>
           <label>ID:</label>
-          <input type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
+          <input title="ID" type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
         </div>
         <div>
           <label>Orientation:</label>
-          <input type="text" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
+          <input title="Orientation" type="text" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
         </div>
         <div>
           <label>Size:</label>
-          <input type="text" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
+          <input title="Size" type="text" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
         </div>
         <button onClick={exportDockConfig}>Export Dock Configuration</button>
       </div>
     </div>
   );
 }
+
+
+
 
 export default Settings;

@@ -28,10 +28,11 @@ const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
 
 function createWindow() {
   win = new BrowserWindow({
+    alwaysOnTop: true,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-    },
+    }
   });
 
   win.webContents.on('did-finish-load', () => {
@@ -59,3 +60,5 @@ app.on('activate', () => {
 });
 
 app.whenReady().then(createWindow);
+
+export {win, BrowserWindow};
