@@ -5,12 +5,18 @@ import { db } from '../../firebaseInit';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
+//const BrowserWindow = require('electron').BrowserWindow;
 
 interface SettingsProps {
   auth: any; // Replace 'any' with the correct type of auth
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   shortcutDocRef: any; // Replace 'any' with the correct type of shortcutDocRef
 }
+
+/*function toggleAlwaysOnTop(){
+  let win = BrowserWindow.getFocusedWindow();
+  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
+}*/
 
 function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
   // Correctly initialized useState hook for darkMode
