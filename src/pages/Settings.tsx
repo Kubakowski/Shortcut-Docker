@@ -117,16 +117,6 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
       </section>
 
       <section>
-        <h2>Language</h2>
-        <select title="Language" value={language} onChange={handleLanguageChange}>
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-        </select>
-      </section>
-
-      <section>
         <h2>Always on Top</h2>
         <label>Keeps the dock open and on top while focused on other pages</label>
         <label className="switch">
