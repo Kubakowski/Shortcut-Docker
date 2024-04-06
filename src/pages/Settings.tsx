@@ -6,11 +6,12 @@ import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 
 import '../App.css';
-import { win } from '../../electron/main.ts';
+import '../../electron/main.ts';
+/*import { win } from '../../electron/main.ts';
 
 function toggleOnTop() {
   win?.setAlwaysOnTop(!win.isAlwaysOnTop);
-}
+}*/
 
 type Language = 'English' | 'Spanish' | 'French' | 'German';
 interface SettingsProps {
@@ -34,9 +35,9 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
 
   const toggleNotifications = () => setNotificationsEnabled(prev => !prev);
   const toggleDarkMode = () => setDarkMode(prev => !prev);
-  const toggleAlwaysOnTop = () => {
+  /*const toggleAlwaysOnTop = () => {
     toggleOnTop();
-  };
+  };*/
   const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as Language);
   };
@@ -131,7 +132,7 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
         <h2>Always on Top</h2>
         <label>Keeps the dock open and on top while focused on other pages</label>
         <label className="switch">
-           <input title="Always on Top" type="checkbox" onChange={toggleAlwaysOnTop} />
+           <input title="Always on Top" type="checkbox" /*onChange={toggleAlwaysOnTop}*/ />
            <span className="slider round"></span>
         </label>
       </section>

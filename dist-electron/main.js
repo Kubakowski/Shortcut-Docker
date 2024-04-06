@@ -18,7 +18,7 @@ electron.ipcMain.on("trigger-shortcut", (event, shortcut) => {
     console.error(`stderr: ${stderr}`);
   });
 });
-let win = null;
+let win;
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 function createWindow() {
   win = new electron.BrowserWindow({
@@ -40,7 +40,6 @@ function createWindow() {
 electron.app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     electron.app.quit();
-    win = null;
   }
 });
 electron.app.on("activate", () => {
