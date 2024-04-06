@@ -1,27 +1,26 @@
 // Settings.tsx
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
-import { db } from '../../firebaseInit';
-import { setDoc, doc, getDoc } from 'firebase/firestore';
+import { db, auth } from '../../firebaseInit';
+import { getDoc, addDoc, collection } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
 
 interface SettingsProps {
-  auth: any; // Replace 'any' with the correct type of auth
   setError: React.Dispatch<React.SetStateAction<string | null>>;
-  shortcutDocRef: any; // Replace 'any' with the correct type of shortcutDocRef
+  shortcutDocRef: any; // Consider defining a more specific type
 }
 
-function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
+function Settings({ setError, shortcutDocRef }: SettingsProps) {
   // Correctly initialized useState hook for darkMode
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
   });
   const [dockFields, setDockFields] = useState({
-    color: '',
+    color: 'light',
     id: '',
-    orientation: '',
-    size: ''
+    orientation: 'portrait',
+    size: 'small'
   });
 
   const { pinnedShortcuts } = usePinnedShortcuts();
@@ -48,13 +47,22 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
 
   const toggleDarkMode = () => {setDarkMode(prev => !prev);};
 
-  const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setDockFields(prevState => ({
       ...prevState,
       [name]: value
     }));
   };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("Selected color:", e.target.value); // Add this to debug
+    const { value } = e.target;
+    setDockFields(prevState => ({
+      ...prevState,
+      color: value
+    }));
+};
 
   const fetchShortcutDoc = async () => {
     try {
@@ -71,8 +79,21 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
   };
 
   const exportDockConfig = async () => {
+    console.log("Current color state:", dockFields.color);
+    console.log("Attempting to export dock config...", { auth });
+  
+    if (!auth || !auth.currentUser) {
+      console.error("Auth object or currentUser is undefined.", { auth });
+      setError('You must be logged in to export the configuration.');
+      return;
+    }
+  
+    console.log("User is logged in, proceeding with export.");
+  
+    // Map shortcuts to document references
     const shortcutsRefs = pinnedShortcuts.map(shortcut => createDocumentReference(db, 'Shortcuts', shortcut.id));
-
+  
+    // Prepare the dock configuration data
     const dockConfigData = {
       Color: dockFields.color,
       ID: dockFields.id,
@@ -80,13 +101,12 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
       Shortcuts: shortcutsRefs,
       Size: dockFields.size,
       exportedAt: new Date(),
-      field1: 'value1',
-      field2: 'value2',
-      userId: auth.currentUser ? auth.currentUser.uid : null,
+      userId: auth.currentUser.uid,
     };
-
+  
     try {
-      await setDoc(doc(db, 'Docks', 'userExportedConfig'), dockConfigData);
+      // Use addDoc to add a new document to the 'Docks' collection
+      await addDoc(collection(db, 'Docks'), dockConfigData);
       alert('Dock configuration exported successfully!');
     } catch (error) {
       console.error('Error exporting dock configuration:', error);
@@ -119,21 +139,32 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
       {/* Dock Configuration */}
       <div style={{ marginTop: '20px' }}>
         <h2>Dock Configuration</h2>
+        {/* Color Dropdown */}
         <div>
           <label>Color:</label>
-          <input type="text" title="Color" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
+          <select name="color" value={dockFields.color} onChange={handleColorChange}>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+        <div>
+          <label>Orientation:</label>
+          <select name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange}>
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select>
+        </div>
+        <div>
+          <label>Size:</label>
+          <select name="size" value={dockFields.size} onChange={handleDockFieldChange}>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select>
         </div>
         <div>
           <label>ID:</label>
           <input type="text" title="ID" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
-        </div>
-        <div>
-          <label>Orientation:</label>
-          <input type="text" title="Orientation" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
-        </div>
-        <div>
-          <label>Size:</label>
-          <input type="text" title="Size" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
         </div>
         <button onClick={exportDockConfig}>Export Dock Configuration</button>
       </div>
