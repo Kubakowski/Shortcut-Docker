@@ -158,21 +158,21 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         {/* Color Dropdown */}
         <div>
           <label>Color:</label>
-          <select name="color" value={dockFields.color} onChange={handleColorChange}>
+          <select title="Color" name="color" value={dockFields.color} onChange={handleColorChange}>
             <option value="light">Light</option>
             <option value="dark">Dark</option>
           </select>
         </div>
         <div>
           <label>Orientation:</label>
-          <select name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange}>
+          <select title="Orientation" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange}>
             <option value="portrait">Portrait</option>
             <option value="landscape">Landscape</option>
           </select>
         </div>
         <div>
           <label>Size:</label>
-          <select name="size" value={dockFields.size} onChange={handleDockFieldChange}>
+          <select title="Size" name="size" value={dockFields.size} onChange={handleDockFieldChange}>
             <option value="small">Small</option>
             <option value="medium">Medium</option>
             <option value="large">Large</option>
@@ -180,7 +180,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         </div>
         <div>
           <label>ID:</label>
-          <input type="text" title="ID" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
+          <input title="ID" type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
         </div>
         <button onClick={exportDockConfig}>Export Dock Configuration</button>
       </div>
