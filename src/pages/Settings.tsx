@@ -1,19 +1,11 @@
 // Settings.tsx
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db } from '../../firebaseInit';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
-
 import '../App.css';
-import '../../electron/main.ts';
-/*import { win } from '../../electron/main.ts';
 
-function toggleOnTop() {
-  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
-}*/
-
-type Language = 'English' | 'Spanish' | 'French' | 'German';
 interface SettingsProps {
   auth: any; // Replace 'any' with the correct type of auth
   setError: React.Dispatch<React.SetStateAction<string | null>>;
@@ -21,9 +13,10 @@ interface SettingsProps {
 }
 
 function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
-  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [language, setLanguage] = useState<Language>('English');
+  // Correctly initialized useState hook for darkMode
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
   const [dockFields, setDockFields] = useState({
     color: '',
     id: '',
@@ -33,14 +26,27 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
 
   const { pinnedShortcuts } = usePinnedShortcuts();
 
-  const toggleNotifications = () => setNotificationsEnabled(prev => !prev);
-  const toggleDarkMode = () => setDarkMode(prev => !prev);
-  /*const toggleAlwaysOnTop = () => {
-    toggleOnTop();
-  };*/
-  const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value as Language);
-  };
+  useEffect(() => {
+    // Toggle dark mode class on body element
+    if (darkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    // Retrieve dark mode preference from local storage
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(isDarkMode);
+  }, []);
+
+  useEffect(() => {
+    // Persist dark mode preference in local storage
+    localStorage.setItem('darkMode', darkMode.toString());
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {setDarkMode(prev => !prev);};
 
   const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -100,14 +106,6 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
       <section>
         <h2>Privacy Settings</h2>
         <p>Manage your data and privacy settings.</p>
-      </section>
-
-      <section>
-        <h2>Notifications</h2>
-        <label>
-          Enable Notifications
-          <input type="checkbox" checked={notificationsEnabled} onChange={toggleNotifications} />
-        </label>
       </section>
 
       <section>

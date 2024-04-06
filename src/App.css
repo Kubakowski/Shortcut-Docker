@@ -23,7 +23,11 @@ body {
 
 body.dark {
   /* dark theme variables */
-  --background-color: #070F2B;
+  --background-color: #2E3A59; /* A deep, muted blue instead of pure black or very dark shades */
+  --nav-background-color: #3C487A; /* A slightly brighter shade for the navigation to stand out, but still dark */
+  --nav-background-color2: #4B587C; /* A complementary shade to nav-background-color for visual depth */
+  --highlight-color: #706ABD; /* A muted purple for highlights to contrast without glaring brightness */
+  --text-color: #D0D0D0; /* A soft white for text, ensuring readability without being too stark */
 }
 
 body.protanopia {
