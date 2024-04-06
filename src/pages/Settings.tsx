@@ -121,19 +121,19 @@ function Settings({ auth, setError, shortcutDocRef }: SettingsProps) {
         <h2>Dock Configuration</h2>
         <div>
           <label>Color:</label>
-          <input type="text" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
+          <input type="text" title="Color" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
         </div>
         <div>
           <label>ID:</label>
-          <input type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
+          <input type="text" title="ID" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
         </div>
         <div>
           <label>Orientation:</label>
-          <input type="text" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
+          <input type="text" title="Orientation" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
         </div>
         <div>
           <label>Size:</label>
-          <input type="text" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
+          <input type="text" title="Size" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
         </div>
         <button onClick={exportDockConfig}>Export Dock Configuration</button>
       </div>
