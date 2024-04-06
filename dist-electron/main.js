@@ -22,6 +22,7 @@ let win = null;
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 function createWindow() {
   win = new electron.BrowserWindow({
+    // app will launch always on top by default
     alwaysOnTop: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {

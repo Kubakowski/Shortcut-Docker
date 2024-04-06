@@ -287,8 +287,8 @@ body.trianopia {
 .switch {
   position: relative;
   display: inline-block;
-  width: 10%;  /* 60px original */
-  height: 34px;   /* 34px original */
+  width: 8%;  /* 60px original */
+  height: 7%;   /* 34px original */
 }
 
 /* Hide default HTML checkbox */
@@ -314,10 +314,10 @@ body.trianopia {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
+  height: 65%;
+  width: 25%;
+  left: 6%;
+  bottom: 19%;
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
@@ -332,14 +332,14 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(260%);
+  -ms-transform: translateX(260%);
+  transform: translateX(260%);
 }
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+  border-radius: 34px; /*original: 34px*/
 }
 
 .slider.round:before {
