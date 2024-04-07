@@ -18,6 +18,10 @@ electron.ipcMain.on("trigger-shortcut", (event, shortcut) => {
     console.error(`stderr: ${stderr}`);
   });
 });
+/* electron.ipcMain.on("toggle-alwaysOnTop", () => {
+  let currentWindow = electron.BrowserWindow.getFocusedWindow();
+  currentWindow == null ? void 0 : currentWindow.setAlwaysOnTop(!currentWindow.isAlwaysOnTop);
+}); */
 let win = null;
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 function createWindow() {

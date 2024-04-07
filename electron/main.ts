@@ -23,6 +23,12 @@ ipcMain.on('trigger-shortcut', (event, shortcut) => {
   });
 });
 
+// When a message is sent to toggle-alwaysOnTop channel, flips the toggle
+/*ipcMain.on('toggle-alwaysOnTop', () => {
+  let currentWindow = BrowserWindow.getFocusedWindow();
+  // sets to opposite of current status (if off turn on, if on turn off)
+  currentWindow?.setAlwaysOnTop(!currentWindow.isAlwaysOnTop);
+});*/
 let win: BrowserWindow | null = null;
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
 

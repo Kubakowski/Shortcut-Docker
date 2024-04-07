@@ -5,6 +5,9 @@ import { db, auth } from '../../firebaseInit';
 import { getDoc, addDoc, collection } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
+//const { ipcRenderer } = require('electron');
+import { ipcRenderer } from 'electron';
+//const { ipcMain } = require('electron');
 //const BrowserWindow = require('electron').BrowserWindow;
 
 interface SettingsProps {
@@ -13,8 +16,9 @@ interface SettingsProps {
 }
 
 /*function toggleAlwaysOnTop(){
-  let win = BrowserWindow.getFocusedWindow();
-  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
+  //let win = BrowserWindow.getFocusedWindow();
+  //win?.setAlwaysOnTop(!win.isAlwaysOnTop);
+  ipcRenderer.send('toggle-alwaysOnTop');
 }*/
 
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
@@ -147,7 +151,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         <label>Keeps the dock open and on top while focused on other pages</label>
         <br/>
         <label className="switch">
-           <input title="Always on Top" type="checkbox" /*onChange={toggleAlwaysOnTop}*/ />
+           <input title="Always on Top" type="checkbox" onChange={toggleAlwaysOnTop} />
            <span className="slider round"></span>
         </label>
       </section>
