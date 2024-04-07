@@ -1,4 +1,10 @@
 "use strict";
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
 const electron = require("electron");
 const path = require("node:path");
 const child_process = require("child_process");
@@ -18,10 +24,29 @@ electron.ipcMain.on("trigger-shortcut", (event, shortcut) => {
     console.error(`stderr: ${stderr}`);
   });
 });
-/* electron.ipcMain.on("toggle-alwaysOnTop", () => {
-  let currentWindow = electron.BrowserWindow.getFocusedWindow();
-  currentWindow == null ? void 0 : currentWindow.setAlwaysOnTop(!currentWindow.isAlwaysOnTop);
-}); */
+class onTopEmitter extends EventTarget {
+  constructor() {
+    super(...arguments);
+    __publicField(this, "onToggle");
+    __publicField(this, "onChangeOnTop");
+    //public toggled: boolean = false
+    __publicField(this, "_toggled", new Event("complete"));
+  }
+}
+const alwaysOnTopEmitter = new onTopEmitter();
+alwaysOnTopEmitter.onToggle = () => {
+  console.log("alwaysOnTop toggled");
+  alwaysOnTopEmitter.dispatchEvent(alwaysOnTopEmitter._toggled);
+};
+function setOnTop() {
+  let win2 = electron.BrowserWindow.getFocusedWindow();
+  win2 == null ? void 0 : win2.setAlwaysOnTop(!win2.isAlwaysOnTop);
+}
+const onTopCompleteHandler = () => {
+  console.log("on top handler running");
+  setOnTop();
+};
+alwaysOnTopEmitter.addEventListener("complete", onTopCompleteHandler);
 let win = null;
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 function createWindow() {
@@ -54,3 +79,5 @@ electron.app.on("activate", () => {
   }
 });
 electron.app.whenReady().then(createWindow);
+const main = { alwaysOnTopEmitter, typeof: electron.BrowserWindow };
+module.exports = main;

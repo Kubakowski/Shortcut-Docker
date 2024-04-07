@@ -106,11 +106,11 @@ function Profile({ auth }: { auth: Auth }) {
       <h2>Login</h2>
       <div>
         <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input title="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </div>
       <div>
         <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input title="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
       <button onClick={handleLogin}>Login</button>
       <button onClick={handleGoogleSignIn}>Sign in with Google</button>

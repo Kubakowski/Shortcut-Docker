@@ -5,8 +5,10 @@ import { db, auth } from '../../firebaseInit';
 import { getDoc, addDoc, collection } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
+import {alwaysOnTopEmitter} from '../../electron/main.ts';
+
 //const { ipcRenderer } = require('electron');
-import { ipcRenderer } from 'electron';
+//import { ipcRenderer } from 'electron';
 //const { ipcMain } = require('electron');
 //const BrowserWindow = require('electron').BrowserWindow;
 
@@ -21,7 +23,10 @@ interface SettingsProps {
   ipcRenderer.send('toggle-alwaysOnTop');
 }*/
 
+
+
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
+  //--- Dark Mode Functions ---//
   // Correctly initialized useState hook for darkMode
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
@@ -151,7 +156,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         <label>Keeps the dock open and on top while focused on other pages</label>
         <br/>
         <label className="switch">
-           <input title="Always on Top" type="checkbox" onChange={toggleAlwaysOnTop} />
+           <input title="Always on Top" type="checkbox" onChange={alwaysOnTopEmitter.onToggle()} />
            <span className="slider round"></span>
         </label>
       </section>
@@ -194,5 +199,4 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
 
 
 
-
-export default Settings;
+export { alwaysOnTopEmitter, Settings };

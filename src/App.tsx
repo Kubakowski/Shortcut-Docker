@@ -4,7 +4,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import Profile from './pages/Profile'; 
 import Shortcuts from './pages/Shortcuts';
-import Settings from './pages/Settings';
+import {Settings} from './pages/Settings';
 import { auth } from '../firebaseInit';
 import { PinnedShortcutsProvider } from '../PinnedShortcutsContext';
 import { SetStateAction } from 'react';
