@@ -5,7 +5,7 @@ import { db, auth } from '../../firebaseInit';
 import { getDoc, addDoc, collection } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
-import {alwaysOnTopEmitter} from '../../electron/main.ts';
+//import {alwaysOnTopEmitter} from '../../electron/main.ts';
 
 //const { ipcRenderer } = require('electron');
 //import { ipcRenderer } from 'electron';
@@ -17,12 +17,14 @@ interface SettingsProps {
   shortcutDocRef: any; // Consider defining a more specific type
 }
 
-/*function toggleAlwaysOnTop(){
+const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLSelectElement>) => {
   //let win = BrowserWindow.getFocusedWindow();
   //win?.setAlwaysOnTop(!win.isAlwaysOnTop);
-  ipcRenderer.send('toggle-alwaysOnTop');
-}*/
-
+  //ipcRenderer.send('toggle-alwaysOnTop');
+  console.log(e.target.value, " CLICKED!");
+  window.electronAPI.send('trigger-toggle-on-top', true);
+  console.log(e.target.title, ': toggling alwaysOnTop');
+};
 
 
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
@@ -77,8 +79,9 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
       ...prevState,
       color: value
     }));
-};
+  };
 
+  
   const fetchShortcutDoc = async () => {
     try {
       const docSnap = await getDoc(shortcutDocRef);
@@ -156,7 +159,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         <label>Keeps the dock open and on top while focused on other pages</label>
         <br/>
         <label className="switch">
-           <input title="Always on Top" type="checkbox" onChange={alwaysOnTopEmitter.onToggle()} />
+           <input title="Always on Top" type="checkbox" onChange={sendToggleOnTopMsg}/*onChange={alwaysOnTopEmitter.onToggle()}*/ />
            <span className="slider round"></span>
         </label>
       </section>
@@ -199,4 +202,4 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
 
 
 
-export { alwaysOnTopEmitter, Settings };
+export default Settings;
