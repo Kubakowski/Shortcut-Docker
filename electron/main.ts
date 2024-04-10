@@ -19,50 +19,11 @@ ipcMain.on('trigger-shortcut', (event, shortcut) => {
       console.error(`exec error: ${error.message}`);
       return;
     }
-    console.log(`stdout: ${stdout}`);
+    console.log(`stdout!: ${stdout}`);
     console.error(`stderr: ${stderr}`);
   });
 });
 
-ipcMain.on('trigger-toggle-on-top', () => {
-  let currentWindow = BrowserWindow.getFocusedWindow(); 
-  currentWindow?.setAlwaysOnTop(!currentWindow.isAlwaysOnTop);
-});
-
-/*// When a message is sent to toggle-alwaysOnTop channel, flips the toggle
-ipcMain.on('toggle-alwaysOnTop', () => {
-  alwaysOnTopEmitter.onChangeOnTop();
-  let currentWindow = BrowserWindow.getFocusedWindow();
-  // sets to opposite of current status (if off turn on, if on turn off)
-  currentWindow?.setAlwaysOnTop(!currentWindow.isAlwaysOnTop);
-});
-class onTopEmitter extends EventTarget {
-  public onToggle?: () => void
-  public onChangeOnTop?: () => void    
-  //public toggled: boolean = false
-  
-  public _toggled: Event = new Event('complete')
-}
-
-//--- Always on top code ---//
-const alwaysOnTopEmitter = new onTopEmitter();
-alwaysOnTopEmitter.onToggle = () => {
-  console.log('alwaysOnTop toggled');
-  alwaysOnTopEmitter.dispatchEvent(alwaysOnTopEmitter._toggled)
-//alwaysOnTopEmitter.toggled = true;
-}
-alwaysOnTopEmitter.onChangeOnTop = () => {
-alwaysOnTopEmitter.toggled = false;
-}
-
-const onTopCompleteHandler = () => {
-  console.log('on top handler running');
-  setOnTop();
-}
-
-//alwaysOnTopEmitter.addEventListener('complete', onTopCompleteHandler);
-
-//--- End of Always on top code ---// */
 
 let win: BrowserWindow | null = null;
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
@@ -70,7 +31,7 @@ const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
 function createWindow() {
   win = new BrowserWindow({
     // app will launch always on top by default
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -87,6 +48,12 @@ function createWindow() {
     win.loadFile(path.join(process.env.DIST, 'index.html'));
   }
 }
+
+// Listener for hitting the alwaysOnTop toggle switch in Settings.tsx
+ipcMain.on('trigger-toggle-on-top', () => {
+  win?.setAlwaysOnTop(!win.isAlwaysOnTop());
+  console.log("alwaysOnTop = ", win?.isAlwaysOnTop());
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

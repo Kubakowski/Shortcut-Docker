@@ -17,15 +17,6 @@ interface SettingsProps {
   shortcutDocRef: any; // Consider defining a more specific type
 }
 
-const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //let win = BrowserWindow.getFocusedWindow();
-  //win?.setAlwaysOnTop(!win.isAlwaysOnTop);
-  //ipcRenderer.send('toggle-alwaysOnTop');
-  console.log(e.target.value, " CLICKED!");
-  window.electronAPI.send('trigger-toggle-on-top', true);
-  console.log(e.target.title, ': toggling alwaysOnTop');
-};
-
 
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
   //--- Dark Mode Functions ---//
@@ -33,6 +24,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
   });
+
   const [dockFields, setDockFields] = useState({
     color: 'light',
     id: '',
@@ -81,6 +73,30 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     }));
   };
 
+  //--- Always on top functions ---//
+
+  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
+    return localStorage.getItem('alwaysOnTop') === 'true';
+  });
+
+  useEffect(() => {
+    // Retrieve alwaysOnTop preference from local storage
+    const isAlwaysOnTop = localStorage.getItem('alwaysOnTop') === 'true';
+    setAlwaysOnTop(isAlwaysOnTop);
+  }, []);
+
+  useEffect(() => {
+    // Persist alwaysOnTop preference in local storage
+    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
+  }, [alwaysOnTop]);
+
+  const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    console.log(`${e.target.title} switch CLICKED! toggle is ${localStorage.getItem('alwaysOnTop') === 'true'}`);
+    
+    setAlwaysOnTop(prev => !prev);
+    window.electronAPI.send('trigger-toggle-on-top', true);
+    //console.log(e.target.title, ': toggling alwaysOnTop');
+  };
   
   const fetchShortcutDoc = async () => {
     try {
@@ -159,7 +175,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         <label>Keeps the dock open and on top while focused on other pages</label>
         <br/>
         <label className="switch">
-           <input title="Always on Top" type="checkbox" onChange={sendToggleOnTopMsg}/*onChange={alwaysOnTopEmitter.onToggle()}*/ />
+           <input title="Always on Top" type="checkbox" checked={alwaysOnTop} onChange={sendToggleOnTopMsg} />
            <span className="slider round"></span>
         </label>
       </section>
