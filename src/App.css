@@ -9,7 +9,9 @@
 
   --background-color: #9ea9e5;
   --dock-btn-color: rgb(172, 172, 172);
-  --big-shortcut-background-color: #e9e9e9;
+  --big-shortcut-background-color: #222161;
+  --big-shortcut-btn-color: #5852af;
+  --dock-background-color: #FFF;
   --nav-background-color: #222161;
   --nav-background-color2: #394867;
   --highlight-color: #5852af;
@@ -25,7 +27,9 @@ body {
 body.dark {
   /* dark theme variables */
   --dock-btn-color: rgb(110, 110, 110);
-  --big-shortcut-background-color: rgb(59, 59, 59);
+  --big-shortcut-background-color: #5852af;
+  --big-shortcut-btn-color: #3C487A;
+  --dock-background-color: rgb(59, 59, 59);
   --background-color: #2E3A59; 
   --nav-background-color: #3C487A; 
   --nav-background-color2: #4B587C; 
@@ -346,7 +350,7 @@ section {
 }
 
 .shortcut-name {
-  color: var(--text-color);
+  color: #D0D0D0;
   font-weight: 500;
   margin-top: 5px;
   margin-bottom: 15px;
@@ -359,9 +363,11 @@ section {
   padding-left: 20px;
   padding-right: 20px;
   margin: 0;
+  font-weight: 500;
   align-items: center;
   justify-content: center;
-  background-color: var(--dock-btn-color);
+  background-color: var(--big-shortcut-btn-color);
+  color: var(--text-color);
   border: 2px solid black;
   border-radius: 30px;
   margin-bottom: 10px;
@@ -372,7 +378,7 @@ section {
   padding: 0;
   min-width: 30px; 
   min-height: 30px; 
-  background-color: var(--dock-btn-color) !important;
+  background-color: var(--big-shortcut-btn-color) !important;
   border: 2px solid black !important;
   margin-left: 5px !important;
   margin-right: 5px !important;
@@ -398,7 +404,7 @@ section {
   border: 3px solid black;
   min-height: 250px;
   min-width: 450px;
-  background-color: var(--big-shortcut-background-color);
+  background-color: var(--dock-background-color);
   border-radius: 10px;
 }
 
