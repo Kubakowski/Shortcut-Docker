@@ -4,7 +4,6 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 
 // Define the shape of a shortcut
 interface Shortcut {
-  execute(): void;
   id: string;
   action: string;
   Keys: string;
