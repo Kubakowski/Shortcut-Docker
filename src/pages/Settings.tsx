@@ -4,7 +4,6 @@ import { db, auth } from '../../firebaseInit';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
-//const BrowserWindow = require('electron').BrowserWindow;
 
 interface SettingsProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>;
@@ -12,34 +11,13 @@ interface SettingsProps {
 }
 
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
+  const { pinnedShortcuts } = usePinnedShortcuts();
 
   //--- Font Change Functions ---//
   const [fontFamily, setFontFamily] = useState(() => localStorage.getItem('fontFamily') || 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif');
   const [fontSize, setFontSize] = useState(() => localStorage.getItem('fontSize') || 'medium');
   const [isComicSans, setIsComicSans] = useState(false);
-  const [highContrastMode, setHighContrastMode] = useState(() => localStorage.getItem('highContrastMode') === 'true');
-
-
-  // Correctly initialized useState hook for darkMode
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('darkMode') === 'true';
-  });
-  const [dockFields, setDockFields] = useState({
-    color: 'light',
-    id: '',
-    orientation: 'portrait',
-    size: 'small'
-  });
-
-  const { pinnedShortcuts } = usePinnedShortcuts();
-
-  useEffect(() => {
-    document.body.classList.toggle('dark', darkMode);
-    document.body.classList.toggle('high-contrast', highContrastMode);
-    localStorage.setItem('darkMode', darkMode);
-    localStorage.setItem('highContrastMode', highContrastMode);
-  }, [darkMode, highContrastMode]);
-
+  
   useEffect(() => {
     document.body.style.fontFamily = fontFamily;
     localStorage.setItem('fontFamily', fontFamily);
@@ -51,23 +29,39 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     localStorage.setItem('fontSize', fontSize);
   }, [fontSize]);
 
-  const toggleDarkMode = () => {
-    setDarkMode(true);
-    setHighContrastMode(false);
-  };
-
   const toggleFontFamily = () => {
     setIsComicSans(prev => !prev);
     setFontFamily(prev => prev === 'Comic Sans MS, Comic Sans, cursive' ? 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif' : 'Comic Sans MS, Comic Sans, cursive');
   };
 
-  const toggleHighContrastMode = () => {
-    setHighContrastMode(true);
-    setDarkMode(false);
-  };
-
   const handleFontSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFontSize(e.target.value);
+  };
+
+  //--- Dark Mode / High Contrast Mode Functions ---//
+
+  // Correctly initialized useState hook for darkMode
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
+
+  const [dockFields, setDockFields] = useState({
+    color: 'light',
+    id: '',
+    orientation: 'portrait',
+    size: 'small'
+  });
+
+  const [highContrastMode, setHighContrastMode] = useState(() => localStorage.getItem('highContrastMode') === 'true');
+
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev);
+    //setHighContrastMode(false);
+  };
+
+  const toggleHighContrastMode = () => {
+    setHighContrastMode(prev => !prev);
+    //setDarkMode(false);
   };
 
   const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,31 +82,56 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   };
 
   //--- Always on top functions ---//
-
   const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
     return localStorage.getItem('alwaysOnTop') === 'true';
   });
-
-  useEffect(() => {
-    // Retrieve alwaysOnTop preference from local storage
-    const isAlwaysOnTop = localStorage.getItem('alwaysOnTop') === 'true';
-    setAlwaysOnTop(isAlwaysOnTop);
-  }, []);
-
-  useEffect(() => {
-    // Persist alwaysOnTop preference in local storage
-    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
-  }, [alwaysOnTop]);
 
   const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(`${e.target.title} switch CLICKED! toggle is ${localStorage.getItem('alwaysOnTop') === 'true'}`);
     
     setAlwaysOnTop(prev => !prev);
     window.electronAPI.send('trigger-toggle-on-top', true);
-    //console.log(e.target.title, ': toggling alwaysOnTop');
+    //console.log(e.target.title, ': toggling alwaysOnTop'); // debugging message
   };
 
   //--- End of Always on Top functions ---//
+
+  //--- Preference Persistence Functions ---//
+  useEffect(() => {
+    // Retrieve preferences from local storage
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    const isHighContrastMode = localStorage.getItem('high-contrast') === 'true';
+    const isAlwaysOnTop = localStorage.getItem('alwaysOnTop') === 'true';
+    
+    setDarkMode(isDarkMode);
+    setHighContrastMode(isHighContrastMode);
+    setAlwaysOnTop(isAlwaysOnTop);
+  }, []);
+
+  useEffect(() => {
+    // Persist preferences in local storage
+    // since darkmode called first, it will always be overridden when high contrast selected
+    localStorage.setItem('darkMode', darkMode.toString());
+    localStorage.setItem('highContrastMode', highContrastMode.toString());
+    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
+  }, [darkMode, highContrastMode, alwaysOnTop]);
+
+  useEffect(() => {
+    // Toggle dark mode class on body element
+    if (darkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+    // toggle high contrast mode on body element
+    if (highContrastMode) {
+      document.body.classList.add('high-contrast');
+    } else {
+      document.body.classList.remove('high-contrast');
+    }
+  }, [darkMode, highContrastMode]);
+
+  //--- end ---//
 
   const fetchShortcutDoc = async () => {
     try {

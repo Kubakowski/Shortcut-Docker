@@ -19,7 +19,7 @@ function App() {
             <Routes>
               <Route path="/profile" element={<Profile auth={auth} />} />
               <Route path="/shortcuts" element={<Shortcuts />} />
-              <Route path="/settings" element={<Settings auth={undefined} setError={function (value: SetStateAction<string | null>): void {
+              <Route path="/settings" element={<Settings setError={function (value: SetStateAction<string | null>): void {
                 throw new Error('Function not implemented.');
               } } shortcutDocRef={undefined} />} />
             </Routes>

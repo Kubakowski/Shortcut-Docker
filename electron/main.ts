@@ -8,7 +8,7 @@ const VITE_PUBLIC = app.isPackaged ? DIST : path.join(DIST, '../public');
 process.env.DIST = DIST;
 process.env.VITE_PUBLIC = VITE_PUBLIC;
 
-ipcMain.on('trigger-shortcut', (event, shortcut) => {
+ipcMain.on('trigger-shortcut', ( shortcut) => {
   // Assuming `shortcutExecutor.exe` is your compiled AHK script ready to receive a shortcut parameter
   const executablePath = path.join(__dirname, 'shortcut1.exe');
 
