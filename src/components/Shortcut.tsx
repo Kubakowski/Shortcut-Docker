@@ -1,4 +1,3 @@
-//Shortcut.tsx
 import React from 'react';
 import Button from '@mui/material/Button'; 
 import pinIcon from '../assets/pin-icon.png';
@@ -50,6 +49,7 @@ const translateKeys = (keys: string) => {
 type ShortcutComponentProps = {
   action: string;
   Keys: string;
+  IconPath?: string; // Optional icon property
   onPin: () => void;
   onUnpin: () => void;
   isPinned: boolean;
