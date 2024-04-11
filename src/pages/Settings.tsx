@@ -201,7 +201,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         <label>Keeps the dock open and on top while focused on other pages</label>
         <br/>
         <label className="switch">
-           <input title="Always on Top" type="checkbox" /*onChange={toggleAlwaysOnTop}*/ />
+           <input title="Always on Top" type="checkbox" onChange={sendToggleOnTopMsg} />
            <span className="slider round"></span>
         </label>
       </section>
