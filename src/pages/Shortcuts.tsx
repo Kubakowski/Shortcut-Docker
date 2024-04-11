@@ -5,14 +5,7 @@ import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
 import Dock from '../components/Dock';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
-
-type Shortcut = {
-  id: string;
-  action: string;
-  Keys: string; // Adjusted to use "Keys" with capital "K"
-  execute: () => void;
-};
-
+import { Shortcut } from '../types/types.ts'; 
 function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -66,18 +59,7 @@ function Shortcuts() {
   return (
     <div className='shortcuts-page-wrapper'>
       <div className='top-dock-wrapper'>
-        <Dock />
-        {pinnedShortcuts.map((shortcut) => (
-          <ShortcutComponent
-            key={shortcut.id}
-            action={shortcut.action}
-            Keys={shortcut.Keys}
-            onPin={() => { /* logic to handle re-pinning if needed */ }}
-            onUnpin={() => handleUnpinShortcut(shortcut.id)}
-            isPinned={true}
-            onClick={() => shortcut.execute()}
-          />
-        ))}
+      <Dock pinnedShortcuts={pinnedShortcuts as Shortcut[]} onUnpin={handleUnpinShortcut} />        
       </div>
       <hr className='shortcuts-divider' />
       <div className='individual-shortcuts-wrapper'>
