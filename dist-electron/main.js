@@ -14,7 +14,7 @@ electron.ipcMain.on("trigger-shortcut", (event, shortcut) => {
       console.error(`exec error: ${error.message}`);
       return;
     }
-    console.log(`stdout: ${stdout}`);
+    console.log(`stdout!: ${stdout}`);
     console.error(`stderr: ${stderr}`);
   });
 });
@@ -23,7 +23,7 @@ const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 function createWindow() {
   win = new electron.BrowserWindow({
     // app will launch always on top by default
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js")
@@ -38,6 +38,10 @@ function createWindow() {
     win.loadFile(path.join(process.env.DIST, "index.html"));
   }
 }
+electron.ipcMain.on("trigger-toggle-on-top", () => {
+  win == null ? void 0 : win.setAlwaysOnTop(!win.isAlwaysOnTop());
+  console.log("alwaysOnTop = ", win == null ? void 0 : win.isAlwaysOnTop());
+});
 electron.app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     electron.app.quit();

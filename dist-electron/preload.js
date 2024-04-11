@@ -5,7 +5,7 @@ electron.contextBridge.exposeInMainWorld("electronAPI", {
   triggerShortcut: () => {
   },
   send: (channel, data) => {
-    const validChannels = ["trigger-shortcut"];
+    const validChannels = ["trigger-shortcut", "trigger-toggle-on-top"];
     if (validChannels.includes(channel)) {
       electron.ipcRenderer.send(channel, data);
     }
