@@ -11,6 +11,11 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import '../App.css';
+//import {alwaysOnTopEmitter} from '../../electron/main.ts';
+
+//const { ipcRenderer } = require('electron');
+//import { ipcRenderer } from 'electron';
+//const { ipcMain } = require('electron');
 //const BrowserWindow = require('electron').BrowserWindow;
 
 interface SettingsProps {
@@ -18,17 +23,15 @@ interface SettingsProps {
   shortcutDocRef: any; // Consider defining a more specific type
 }
 
-/*function toggleAlwaysOnTop(){
-  let win = BrowserWindow.getFocusedWindow();
-  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
-}*/
 
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(false); // State for Always on Top switch
+  //--- Dark Mode Functions ---//
   // Correctly initialized useState hook for darkMode
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
   });
+
   const [dockFields, setDockFields] = useState({
     color: 'light',
     id: '',
@@ -76,7 +79,9 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
       ...prevState,
       color: value
     }));
-};
+  };
+
+  //--- Always on top functions ---//
 
 const toggleAlwaysOnTop = () => {
   setAlwaysOnTop(prev => !prev);
@@ -84,6 +89,29 @@ const toggleAlwaysOnTop = () => {
   // e.g., window.setAlwaysOnTop(alwaysOnTop);
 };
 
+  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
+    return localStorage.getItem('alwaysOnTop') === 'true';
+  });
+
+  useEffect(() => {
+    // Retrieve alwaysOnTop preference from local storage
+    const isAlwaysOnTop = localStorage.getItem('alwaysOnTop') === 'true';
+    setAlwaysOnTop(isAlwaysOnTop);
+  }, []);
+
+  useEffect(() => {
+    // Persist alwaysOnTop preference in local storage
+    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
+  }, [alwaysOnTop]);
+
+  const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    console.log(`${e.target.title} switch CLICKED! toggle is ${localStorage.getItem('alwaysOnTop') === 'true'}`);
+    
+    setAlwaysOnTop(prev => !prev);
+    window.electronAPI.send('trigger-toggle-on-top', true);
+    //console.log(e.target.title, ': toggling alwaysOnTop');
+  };
+  
   const fetchShortcutDoc = async () => {
     try {
       const docSnap = await getDoc(shortcutDocRef);
@@ -163,7 +191,6 @@ const toggleAlwaysOnTop = () => {
     </Box>
   );
 }
-
 
 
 

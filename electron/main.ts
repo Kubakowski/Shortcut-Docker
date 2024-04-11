@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import { exec, ExecException } from 'child_process';
+//import {alwaysOnTopEmitter} from '../src/pages/Settings.tsx';
 
 const DIST = path.join(__dirname, '../dist');
 const VITE_PUBLIC = app.isPackaged ? DIST : path.join(DIST, '../public');
@@ -18,10 +19,11 @@ ipcMain.on('trigger-shortcut', (event, shortcut) => {
       console.error(`exec error: ${error.message}`);
       return;
     }
-    console.log(`stdout: ${stdout}`);
+    console.log(`stdout!: ${stdout}`);
     console.error(`stderr: ${stderr}`);
   });
 });
+
 
 let win: BrowserWindow | null = null;
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
@@ -29,7 +31,7 @@ const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
 function createWindow() {
   win = new BrowserWindow({
     // app will launch always on top by default
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -46,6 +48,12 @@ function createWindow() {
     win.loadFile(path.join(process.env.DIST, 'index.html'));
   }
 }
+
+// Listener for hitting the alwaysOnTop toggle switch in Settings.tsx
+ipcMain.on('trigger-toggle-on-top', () => {
+  win?.setAlwaysOnTop(!win.isAlwaysOnTop());
+  console.log("alwaysOnTop = ", win?.isAlwaysOnTop());
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
