@@ -4,14 +4,37 @@ import { db } from '../../firebaseInit';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
+//const BrowserWindow = require('electron').BrowserWindow;
 
-const Settings = ({ auth, setError, shortcutDocRef }) => {
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+interface SettingsProps {
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+  shortcutDocRef: any; // Consider defining a more specific type
+}
+
+/*function toggleAlwaysOnTop(){
+  let win = BrowserWindow.getFocusedWindow();
+  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
+}*/
+
+function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const [fontFamily, setFontFamily] = useState(() => localStorage.getItem('fontFamily') || 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif');
+  const [fontSize, setFontSize] = useState(() => localStorage.getItem('fontSize') || 'medium');
   const [fontSize, setFontSize] = useState(() => localStorage.getItem('fontSize') || 'medium');
   const [dockFields, setDockFields] = useState({ color: '', id: '', orientation: '', size: '' });
   const [isComicSans, setIsComicSans] = useState(false);
   const [highContrastMode, setHighContrastMode] = useState(() => localStorage.getItem('highContrastMode') === 'true');
+
+
+  // Correctly initialized useState hook for darkMode
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
+  const [dockFields, setDockFields] = useState({
+    color: 'light',
+    id: '',
+    orientation: 'portrait',
+    size: 'small'
+  });
 
   const { pinnedShortcuts } = usePinnedShortcuts();
 
@@ -54,9 +77,46 @@ const Settings = ({ auth, setError, shortcutDocRef }) => {
 
   const handleDockFieldChange = e => {
     const { name, value } = e.target;
-    setDockFields(prevState => ({ ...prevState, [name]: value }));
+    setDockFields(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
+  const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("Selected color:", e.target.value); // Add this to debug
+    const { value } = e.target;
+    setDockFields(prevState => ({
+      ...prevState,
+      color: value
+    }));
+  };
+
+  //--- Always on top functions ---//
+
+  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
+    return localStorage.getItem('alwaysOnTop') === 'true';
+  });
+
+  useEffect(() => {
+    // Retrieve alwaysOnTop preference from local storage
+    const isAlwaysOnTop = localStorage.getItem('alwaysOnTop') === 'true';
+    setAlwaysOnTop(isAlwaysOnTop);
+  }, []);
+
+  useEffect(() => {
+    // Persist alwaysOnTop preference in local storage
+    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
+  }, [alwaysOnTop]);
+
+  const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    console.log(`${e.target.title} switch CLICKED! toggle is ${localStorage.getItem('alwaysOnTop') === 'true'}`);
+    
+    setAlwaysOnTop(prev => !prev);
+    window.electronAPI.send('trigger-toggle-on-top', true);
+    //console.log(e.target.title, ': toggling alwaysOnTop');
+  };
+  
   const fetchShortcutDoc = async () => {
     try {
       const docSnap = await getDoc(shortcutDocRef);
@@ -138,6 +198,16 @@ const Settings = ({ auth, setError, shortcutDocRef }) => {
         </button>
       </section>
 
+      <section>
+        <h2>Always on Top</h2>
+        <label>Keeps the dock open and on top while focused on other pages</label>
+        <br/>
+        <label className="switch">
+           <input title="Always on Top" type="checkbox" /*onChange={toggleAlwaysOnTop}*/ />
+           <span className="slider round"></span>
+        </label>
+      </section>
+
       <section className="section">
         <h2>Font Size</h2>
         <select value={fontSize} onChange={handleFontSizeChange} aria-label="Select Font Size">
@@ -170,6 +240,6 @@ const Settings = ({ auth, setError, shortcutDocRef }) => {
       </section>
     </div>
   );
-};
+}
 
 export default Settings;

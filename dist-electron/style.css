@@ -1,0 +1,347 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  margin: 0 auto;
+  text-align: center;
+  /*font-synthesis: none;*/
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -text-size-adjust: 100%;
+
+  --background-color: #9ea9e5;
+  --nav-background-color: #222161;
+  --nav-background-color2: #394867;
+  --highlight-color: #5852af;
+  --text-color: #EEEEEE;
+}
+
+
+body {
+  margin: 0;
+  background-color: var(--background-color);
+}
+
+body.dark {
+  /* dark theme variables */
+  --background-color: #2E3A59; /* A deep, muted blue instead of pure black or very dark shades */
+  --nav-background-color: #3C487A; /* A slightly brighter shade for the navigation to stand out, but still dark */
+  --nav-background-color2: #4B587C; /* A complementary shade to nav-background-color for visual depth */
+  --highlight-color: #706ABD; /* A muted purple for highlights to contrast without glaring brightness */
+  --text-color: #D0D0D0; /* A soft white for text, ensuring readability without being too stark */
+}
+
+body.protanopia {
+  /* protanopia theme variables */
+  --background-color: #070F2B;
+}
+
+body.deuteranopia{
+  /* deuteranopia theme variables */
+  --background-color: #070F2B;
+}
+
+body.trianopia {
+  /* trianopia theme variables */
+  --background-color: #070F2B;
+}
+
+
+/****************************** START OF NAVBAR STYLES ******************************/
+
+.navbar-wrapper {
+  padding: 0;
+  width: 12%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--nav-background-color);
+  align-items: center;
+  position: fixed;
+  border: 4px solid black;
+  border-right: 4px solid black;
+  left: 0;
+  top: 0;
+}
+
+.profile-wrapper {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+  height: 18%;
+  border-bottom: 4px solid;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.profile-wrapper button {
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+.profile-wrapper button img {
+  width: 80%;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.tabs-wrapper {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.nav-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.nav-btn-wrapper button {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  background-color: var(--highlight-color);
+  border: 3px solid black;
+  border-radius: 15px;
+  height: 30%;
+  width: 80%;
+}
+
+.nav-btn-wrapper img {
+  width: 75%; 
+  height: auto;
+}
+
+
+
+
+/****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
+
+
+.main-content {
+  margin-left: 12%; 
+  width: 88%; 
+}
+
+
+/****************************** START OF SHORTCUTS PAGE STYLES ******************************/
+
+.shortcuts-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  height: 100vh; 
+}
+
+.top-dock-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 1 35%; 
+  width: 100%; 
+}
+
+.individual-shortcuts-wrapper {
+  width: 100%; 
+  padding: 0 5%; 
+  box-sizing: border-box; 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  overflow-y: auto; 
+  max-height: 65%; 
+  margin-bottom: 1rem; 
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar-track {
+  background: #50505086;
+  border-radius: 10px;
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar-thumb {
+  background: rgb(59, 59, 59);
+  border-radius: 10px;
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.individual-shortcuts-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+
+
+.shortcuts-divider {
+  background-color: black; 
+  border-color: black;
+  height: 4px; 
+  width: 90%;
+  margin: 1rem auto; 
+  border-radius: 10px; 
+}
+
+
+
+
+/****************************** START OF SETTINGS PAGE STYLES ******************************/
+
+
+
+
+/****************************** START OF PROFILE PAGE STYLES ******************************/
+
+.shortcuts-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-user-section {
+  margin-bottom: 20px;
+}
+
+.login-section {
+  margin-top: 20px;
+}
+
+/****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
+
+
+.shortcut-wrapper {
+  border: 3px solid black;
+  height: 150px;
+  width: 300px;
+  background-color: rgb(59, 59, 59);
+  border-radius: 15px;
+}
+
+/****************************** START OF DOCK STYLES ******************************/
+
+.dock-wrapper {
+  border: 3px solid black;
+  min-height: 250px;
+  min-width: 450px;
+  background-color: rgb(59, 59, 59);
+  border-radius: 10px;
+}
+
+.dock-header {
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+}
+
+.dock-header-text {
+  align-self: center;
+  font-size: 24px;
+  color: var(--text-color);
+}
+
+.dock-arrow-left {
+  cursor: pointer;
+  background-color: rgb(59, 59, 59);
+  border-top: 0;
+  border-left: 0;
+  border-right: 3px solid black;
+  border-bottom: 3px solid black;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  height: 50px;
+  width: 50px;
+}
+
+.dock-arrow-right {
+  cursor: pointer;
+  background-color: rgb(59, 59, 59);
+  border-left: 3px solid black;
+  border-bottom: 3px solid black;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top: 0;
+  border-right: 0;
+  height: 50px;
+  width: 50px;
+}
+
+/****************************** SWITCH STYLES ******************************/
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 8%;  /* 60px original */
+  height: 7%;   /* 34px original */
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 65%;
+  width: 25%;
+  left: 6%;
+  bottom: 19%;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(260%);
+  -ms-transform: translateX(260%);
+  transform: translateX(260%);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px; /*original: 34px*/
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
