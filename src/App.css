@@ -2,17 +2,20 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   margin: 0 auto;
   text-align: center;
-  /*font-synthesis: none;*/
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -text-size-adjust: 100%;
 
   --background-color: #9ea9e5;
+  --dock-btn-color: rgb(172, 172, 172);
+  --big-shortcut-background-color: #222161;
+  --big-shortcut-btn-color: #5852af;
+  --dock-background-color: #FFF;
   --nav-background-color: #222161;
   --nav-background-color2: #394867;
   --highlight-color: #5852af;
-  --text-color: #EEEEEE;
+  --text-color: black;
 }
 
 
@@ -23,11 +26,15 @@ body {
 
 body.dark {
   /* dark theme variables */
-  --background-color: #2E3A59; /* A deep, muted blue instead of pure black or very dark shades */
-  --nav-background-color: #3C487A; /* A slightly brighter shade for the navigation to stand out, but still dark */
-  --nav-background-color2: #4B587C; /* A complementary shade to nav-background-color for visual depth */
-  --highlight-color: #706ABD; /* A muted purple for highlights to contrast without glaring brightness */
-  --text-color: #D0D0D0; /* A soft white for text, ensuring readability without being too stark */
+  --dock-btn-color: rgb(110, 110, 110);
+  --big-shortcut-background-color: #5852af;
+  --big-shortcut-btn-color: #3C487A;
+  --dock-background-color: rgb(59, 59, 59);
+  --background-color: #2E3A59; 
+  --nav-background-color: #3C487A; 
+  --nav-background-color2: #4B587C; 
+  --highlight-color: #706ABD; 
+  --text-color: #D0D0D0; 
 }
 
 body.protanopia {
@@ -63,7 +70,7 @@ body.trianopia {
   top: 0;
 }
 
-.profile-wrapper {
+.profile-nav-wrapper {
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -75,7 +82,7 @@ body.trianopia {
   width: 100%;
 }
 
-.profile-wrapper button {
+.profile-nav-wrapper button {
   cursor: pointer;
   width: 100%;
   display: flex;
@@ -86,7 +93,7 @@ body.trianopia {
   padding: 0;
 }
 
-.profile-wrapper button img {
+.profile-nav-wrapper button img {
   width: 80%;
   height: auto;
   border-radius: 50%;
@@ -104,6 +111,7 @@ body.trianopia {
 .nav-btn-wrapper {
   display: flex;
   flex-direction: column;
+  gap: '10px';
   align-items: center;
   justify-content: space-around;
   height: 100%;
@@ -128,7 +136,13 @@ body.trianopia {
   height: auto;
 }
 
+.nav-btn-wrapper Button {
+  transition: transform 0.4s; 
+}
 
+.nav-btn-wrapper Button:hover {
+  transform: scale(1.05); 
+}
 
 
 /****************************** START OF MAIN CONTENT LAYOUT STYLES ******************************/
@@ -169,6 +183,7 @@ body.trianopia {
   overflow-y: auto; 
   max-height: 65%; 
   margin-bottom: 1rem; 
+  padding-top: 5px;
 }
 
 .individual-shortcuts-wrapper::-webkit-scrollbar-track {
@@ -205,10 +220,82 @@ body.trianopia {
 
 /****************************** START OF SETTINGS PAGE STYLES ******************************/
 
+.settings-wrapper {
+  width: 50%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  background-color: var(--highlight-color);
+  box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  border: 3px solid black;
+}
 
+section {
+  margin-bottom: 2rem;
+}
 
+.MuiTextField-root {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.mui-btn {
+  background-color: var(--nav-background-color) !important;
+  border: 1px solid black !important;
+  margin-top: 20px !important;
+  font-size: 13.5px !important;
+  width: 250px;
+  height: 50px;
+}
+
+.mui-input {
+  width: 300px;
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+.dock-settings {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.settings-label {
+  margin-top: 0;
+  font-size: 45px;
+  margin-bottom: 20px;
+}
+
+.dock-settings-label {
+  font-size: 35px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 /****************************** START OF PROFILE PAGE STYLES ******************************/
+
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  background-color: var(--highlight-color);
+  box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  border: 3px solid black;
+}
 
 .shortcuts-container {
   display: flex;
@@ -223,15 +310,92 @@ body.trianopia {
   margin-top: 20px;
 }
 
+.adduser-label {
+  margin-top: 40px !important;
+  margin-bottom: 0 !important;
+}
+
+.mui-profile-input {
+  width: 300px;
+  margin-top: 20px !important;
+  margin-bottom: 0 !important;
+}
+
+.mui-btm-profile-input {
+  width: 300px;
+  margin-top: 20px !important;
+  margin-bottom: 15px !important;
+}
+
 /****************************** START OF INDIVIDUAL SHORTCUT STYLES ******************************/
 
 
 .shortcut-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 3px solid black;
   height: 150px;
   width: 300px;
-  background-color: rgb(59, 59, 59);
+  background-color: var(--big-shortcut-background-color);
   border-radius: 15px;
+}
+
+.shortcut-wrapper:hover {
+  transform: scale(1.05); 
+}
+
+.shortcut-wrapper {
+  transition: transform 0.3s; 
+}
+
+.shortcut-name {
+  color: #D0D0D0;
+  font-weight: 500;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.shortcut-keys {
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0;
+  font-weight: 500;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--big-shortcut-btn-color);
+  color: var(--text-color);
+  border: 2px solid black;
+  border-radius: 30px;
+  margin-bottom: 10px;
+}
+
+.shortcut-action-btn {
+  color: var(--text-color) !important;
+  padding: 0;
+  min-width: 30px; 
+  min-height: 30px; 
+  background-color: var(--big-shortcut-btn-color) !important;
+  border: 2px solid black !important;
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+  margin-bottom: 10px !important;
+}
+
+.shortcut-action-btn:hover {
+  transform: scale(1.1); 
+}
+
+.shortcut-action-btn {
+  transition: transform 0.5s; 
+}
+
+.shortcut-action-img {
+  width: 24px;
+  height: 24px;
 }
 
 /****************************** START OF DOCK STYLES ******************************/
@@ -240,7 +404,7 @@ body.trianopia {
   border: 3px solid black;
   min-height: 250px;
   min-width: 450px;
-  background-color: rgb(59, 59, 59);
+  background-color: var(--dock-background-color);
   border-radius: 10px;
 }
 
@@ -258,12 +422,12 @@ body.trianopia {
 
 .dock-arrow-left {
   cursor: pointer;
-  background-color: rgb(59, 59, 59);
+  background-color: var(--dock-btn-color);
   border-top: 0;
   border-left: 0;
   border-right: 3px solid black;
   border-bottom: 3px solid black;
-  border-top-left-radius: 10px;
+  border-top-left-radius: 5px;
   border-bottom-right-radius: 10px;
   height: 50px;
   width: 50px;
@@ -271,10 +435,10 @@ body.trianopia {
 
 .dock-arrow-right {
   cursor: pointer;
-  background-color: rgb(59, 59, 59);
+  background-color: var(--dock-btn-color);
   border-left: 3px solid black;
   border-bottom: 3px solid black;
-  border-top-right-radius: 10px;
+  border-top-right-radius: 5px;
   border-bottom-left-radius: 10px;
   border-top: 0;
   border-right: 0;
@@ -282,23 +446,94 @@ body.trianopia {
   width: 50px;
 }
 
+.dock-arrow-placeholder {
+  width: 50px; 
+  height: 50px; 
+}
+
+
+.dock-arrow-right {
+  transition: transform 0.2s; 
+}
+
+.dock-arrow-right:hover {
+  transform: scale(1.03); 
+}
+
+.dock-arrow-left {
+  transition: transform 0.2s; 
+}
+
+.dock-arrow-left:hover {
+  transform: scale(1.03); 
+}
+
+.dock-shortcut-inner {
+  display: flex;
+  width: 70px;
+  height: 70px;
+  background-color: var(--dock-btn-color);
+  border-radius: 7px;
+  border: 2px solid black;
+}
+
+.dock-body {
+  margin-top: 25px;
+  margin-left: 23px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; 
+  gap: 10px; 
+  height: 175px;
+  width: 432px;
+  padding: 0;
+}
+
+.docked-shortcut .pin-icon {
+  position: absolute;
+  top: 2px;
+  right: -3px;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  transition: transform 0.2s; 
+}
+
+.pin-icon {
+  transition: transform 0.2s; 
+}
+
+.pin-icon:hover {
+  transform: scale(1.3); 
+}
+
+.docked-shortcut:focus {
+  outline: none;
+}
+
+.dock-shortcut-inner {
+  transition: transform 0.2s; 
+}
+
+.dock-shortcut-inner:hover {
+  transform: scale(1.1); 
+}
+
+
 /****************************** SWITCH STYLES ******************************/
-/* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
-  width: 8%;  /* 60px original */
-  height: 7%;   /* 34px original */
+  width: 8%; 
+  height: 7%;   
 }
 
-/* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -337,9 +572,8 @@ input:checked + .slider:before {
   transform: translateX(260%);
 }
 
-/* Rounded sliders */
 .slider.round {
-  border-radius: 34px; /*original: 34px*/
+  border-radius: 34px; 
 }
 
 .slider.round:before {

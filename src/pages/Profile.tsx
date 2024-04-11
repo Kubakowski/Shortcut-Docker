@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, DocumentReference, DocumentData } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
 import { Auth, AuthError, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { TextField, Button, Box, Typography, CircularProgress } from '@mui/material';
 import '../App.css';
 
 type User = {
@@ -85,73 +86,86 @@ function Profile({ auth }: { auth: Auth }) {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Box sx={{ display: 'flex', justifyContent: 'center' }}><CircularProgress /></Box>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <Box>Error: {error}</Box>;
   }
 
   return (
-    <div className="shortcutsContainer">
-      <h1>Users</h1>
-      {/* Render list of users */}
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>{user.username}</li>
-        ))}
-      </ul>
-
-      {/* Login Form */}
-      <h2>Login</h2>
-      <div>
-        <label>Email:</label>
-        <input title="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input title="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </div>
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={handleGoogleSignIn}>Sign in with Google</button>
-      {loginError && <div>{loginError}</div>}
-      {successMessage && <div>{successMessage}</div>}
-
-      {/* Form for adding a new user */}
-      <h2>Add User</h2>
-      <input
-        className="inputField"
-        type="text"
-        placeholder="Dock Config"
-        value={newUser.dockConfig ? newUser.dockConfig.id : ''}
-        onChange={e =>
-          setNewUser({ ...newUser, dockConfig: doc(db, 'docks', e.target.value) }) // Assuming the ID of the dock document is entered in the input field
-        }
-      />
-      <input
-        className="inputField"
-        type="email"
-        placeholder="Email"
-        value={newUser.email}
-        onChange={e => setNewUser({ ...newUser, email: e.target.value })}
-      />
-      <input
-        className="inputField"
-        type="text"
-        placeholder="ID"
-        value={newUser.id}
-        onChange={e => setNewUser({ ...newUser, id: e.target.value })}
-      />
-      <input
-        className="inputField"
-        type="text"
-        placeholder="Username"
-        value={newUser.username}
-        onChange={e => setNewUser({ ...newUser, username: e.target.value })}
-      />
-      <button onClick={handleAddUser}>Add User</button>
-      <button onClick={fetchUsers}>Refresh</button>
-    </div>
+    <Box className='profile-wrapper'>
+      <Typography variant="h4" gutterBottom>Login</Typography>
+      <Box className='input-wrapper'>
+        <TextField
+          className='mui-profile-input'
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          margin="normal"
+        />
+        <TextField
+          className='mui-btm-profile-input'
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          margin="normal"
+        />
+        <Box className='input-wrapper'>
+          <Button className='mui-btn' variant="contained" onClick={handleLogin}>Login</Button>
+          <Button className='mui-btn' variant="contained" onClick={handleGoogleSignIn}>Sign in with Google</Button>
+        </Box>
+        {loginError && <Box sx={{ mt: 2 }}>{loginError}</Box>}
+        {successMessage && <Box sx={{ mt: 2 }}>{successMessage}</Box>}
+      </Box>
+      <Typography className='adduser-label' variant="h4" gutterBottom>Add User</Typography>
+      <Box className='input-wrapper'>
+        <TextField
+          className='mui-profile-input'
+          label="Dock Config"
+          type="text"
+          placeholder="Dock Config"
+          value={newUser.dockConfig ? newUser.dockConfig.id : ''}
+          onChange={e =>
+            setNewUser({ ...newUser, dockConfig: doc(db, 'docks', e.target.value) })
+          }
+          margin="normal"
+        />
+        <TextField
+          className='mui-profile-input'
+          label="Email"
+          type="email"
+          placeholder="Email"
+          value={newUser.email}
+          onChange={e => setNewUser({ ...newUser, email: e.target.value })}
+          margin="normal"
+        />
+        <TextField
+          className='mui-profile-input'
+          label="ID"
+          type="text"
+          placeholder="ID"
+          value={newUser.id}
+          onChange={e => setNewUser({ ...newUser, id: e.target.value })}
+          margin="normal"
+        />
+        <TextField
+          className='mui-btm-profile-input'
+          label="Username"
+          type="text"
+          placeholder="Username"
+          value={newUser.username}
+          onChange={e => setNewUser({ ...newUser, username: e.target.value })}
+          margin="normal"
+        />
+      </Box>
+      <Box className='input-wrapper'>
+        <Button className='mui-btn' variant="contained" onClick={handleAddUser}>Add User</Button>
+        <Button className='mui-btn' variant="contained" onClick={fetchUsers}>Refresh</Button>
+      </Box>
+    </Box>
   );
 }
 export default Profile;
