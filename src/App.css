@@ -45,6 +45,15 @@ body.trianopia {
   --background-color: #070F2B;
 }
 
+body.high-contrast {
+  /* high contrast theme variables */
+  --background-color: #ffffff; /* white background */
+  --nav-background-color: #ffffff; /* white navigation background */
+  --nav-background-color2: #f0f0f0; /* lighter shade for navigation depth */
+  --highlight-color: #ffb6c1; /* pastel pink for highlights */
+  --text-color: #000000; /* black text for maximum contrast */
+}
+
 
 /****************************** START OF NAVBAR STYLES ******************************/
 
@@ -156,6 +165,32 @@ body.trianopia {
   flex: 0 1 35%; 
   width: 100%; 
 }
+.shrt-btn {
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: var(--highlight-color);
+  color: var(--text-color);
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.shrt-btn:hover {
+  background-color: #7e78d1;
+  color: white;
+}
+
+.shrt-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(88, 82, 175, 0.5);
+}
+
 
 .individual-shortcuts-wrapper {
   width: 100%; 

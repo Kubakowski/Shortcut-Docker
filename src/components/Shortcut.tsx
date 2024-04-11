@@ -34,12 +34,18 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, Keys, onP
     <div className='shortcut-wrapper'>
       <h3>{action}</h3>
       <p>{Keys}</p>
-      <Button onClick={handleDoClick}>Execute</Button>
+      <Button onClick={handleDoClick}
+       aria-label={`Execute shortcut for ${action} with keys ${Keys}`}>Execute</Button>
+
       {isPinned && onUnpin && (
-        <Button onClick={onUnpin}>Unpin</Button>
+        <Button onClick={onUnpin}
+        aria-label={`unPin ${action} to Dock`}>Unpin</Button>
+
       )}
       {!isPinned && onPin && (
-        <Button onClick={onPin}>Pin</Button>
+       <Button onClick={onPin}
+       aria-label={`Pin ${action} to Dock`}>Pin</Button>
+
       )}
     </div>
   );
