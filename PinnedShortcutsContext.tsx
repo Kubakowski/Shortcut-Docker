@@ -7,6 +7,7 @@ interface Shortcut {
   id: string;
   action: string;
   Keys: string;
+  IconPath?: string;
 }
 
 // Define the shape of the context state

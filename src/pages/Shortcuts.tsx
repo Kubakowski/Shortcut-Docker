@@ -5,12 +5,14 @@ import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
 import Dock from '../components/Dock';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 type Shortcut = {
   id: string;
   action: string;
   Keys: string; // Adjusted to use "Keys" with capital "K"
   execute: () => void;
+  IconPath?: string;
 };
 
 function Shortcuts() {
@@ -21,20 +23,42 @@ function Shortcuts() {
 
   const fetchShortcuts = async () => {
     try {
+      const storage = getStorage(); // Correctly initializes Firebase Storage
       const shortcutsCollection = collection(db, 'Shortcuts');
       const snapshot = await getDocs(shortcutsCollection);
-      const fetchedShortcuts = snapshot.docs.map(doc => {
+      console.log('Snapshot data:', snapshot.docs.map(doc => doc.data())); // Good for debugging
+  
+      const fetchedShortcutsPromises = snapshot.docs.map(async (doc) => {
         const data = doc.data();
+        console.log(`Data for ${doc.id}:`, data); // Helpful logging
+  
+        let iconUrl = await (async () => {
+          if (data.IconPath && data.IconPath.startsWith('gs://')) {
+            const storageRef = ref(storage, data.IconPath);
+            try {
+              const url = await getDownloadURL(storageRef);
+              console.log(`Download URL for ${doc.id}:`, url);
+              return url;
+            } catch (error) {
+              console.error(`Error fetching icon URL for ${doc.id}:`, error);
+              return 'defaultIconURL'; // Consider having an actual URL here
+            }
+          } else {
+            return data.IconPath || 'defaultIconURL'; // Ensure this is a valid URL
+          }
+        })();
+  
         return {
           id: doc.id,
           action: data.action || '',
           Keys: data.Keys || '',
-          execute: () => {
-            console.log(`Executing action: ${data.action}`);
-          }
+          execute: () => console.log(`Executing action: ${data.action}`),
+          IconPath: iconUrl,
         };
       });
-      console.log('Fetched shortcuts:', fetchedShortcuts);
+  
+      const fetchedShortcuts = await Promise.all(fetchedShortcutsPromises);
+      console.log('Fetched shortcuts:', fetchedShortcuts); // Final check on data
       setShortcuts(fetchedShortcuts);
       setLoading(false);
     } catch (error) {
@@ -42,6 +66,7 @@ function Shortcuts() {
       setError('Error fetching shortcuts');
     }
   };
+
 
   useEffect(() => {
     fetchShortcuts();
@@ -72,6 +97,7 @@ function Shortcuts() {
             key={shortcut.id}
             action={shortcut.action}
             Keys={shortcut.Keys}
+            IconPath={shortcut.IconPath} // Correctly pass IconPath here
             onPin={() => { /* logic to handle re-pinning if needed */ }}
             onUnpin={() => handleUnpinShortcut(shortcut.id)}
             isPinned={true}
@@ -86,6 +112,7 @@ function Shortcuts() {
             key={shortcut.id}
             action={shortcut.action}
             Keys={shortcut.Keys}
+            IconPath={shortcut.IconPath} // Correctly pass IconPath here
             onPin={() => handlePinShortcut(shortcut)}
             onUnpin={() => {}}
             isPinned={false}
