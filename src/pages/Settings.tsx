@@ -19,8 +19,6 @@ interface SettingsProps {
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const [fontFamily, setFontFamily] = useState(() => localStorage.getItem('fontFamily') || 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif');
   const [fontSize, setFontSize] = useState(() => localStorage.getItem('fontSize') || 'medium');
-  const [fontSize, setFontSize] = useState(() => localStorage.getItem('fontSize') || 'medium');
-  const [dockFields, setDockFields] = useState({ color: '', id: '', orientation: '', size: '' });
   const [isComicSans, setIsComicSans] = useState(false);
   const [highContrastMode, setHighContrastMode] = useState(() => localStorage.getItem('highContrastMode') === 'true');
 
