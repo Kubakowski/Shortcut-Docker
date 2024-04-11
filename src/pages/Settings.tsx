@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
-import { db } from '../../firebaseInit';
+import { db, auth } from '../../firebaseInit';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import '../App.css';
@@ -11,12 +11,9 @@ interface SettingsProps {
   shortcutDocRef: any; // Consider defining a more specific type
 }
 
-/*function toggleAlwaysOnTop(){
-  let win = BrowserWindow.getFocusedWindow();
-  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
-}*/
-
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
+
+  //--- Font Change Functions ---//
   const [fontFamily, setFontFamily] = useState(() => localStorage.getItem('fontFamily') || 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif');
   const [fontSize, setFontSize] = useState(() => localStorage.getItem('fontSize') || 'medium');
   const [isComicSans, setIsComicSans] = useState(false);
@@ -69,11 +66,11 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     setDarkMode(false);
   };
 
-  const handleFontSizeChange = (e) => {
+  const handleFontSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFontSize(e.target.value);
   };
 
-  const handleDockFieldChange = e => {
+  const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setDockFields(prevState => ({
       ...prevState,
@@ -107,14 +104,16 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
   }, [alwaysOnTop]);
 
-  const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(`${e.target.title} switch CLICKED! toggle is ${localStorage.getItem('alwaysOnTop') === 'true'}`);
     
     setAlwaysOnTop(prev => !prev);
     window.electronAPI.send('trigger-toggle-on-top', true);
     //console.log(e.target.title, ': toggling alwaysOnTop');
   };
-  
+
+  //--- End of Always on Top functions ---//
+
   const fetchShortcutDoc = async () => {
     try {
       const docSnap = await getDoc(shortcutDocRef);
@@ -152,7 +151,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     }
   };
 
-  const getFontSizeValue = (size) => {
+  const getFontSizeValue = (size: string) => {
     switch (size) {
       case 'small':
         return '14px';
@@ -219,20 +218,28 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
       <section className="section">
         <h2>Dock Configuration</h2>
         <div className="inputGroup">
-          <label>Color:</label>
-          <input type="text" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
+          <label>
+            Color:
+            <input type="text" name="color" value={dockFields.color} onChange={handleDockFieldChange} />
+          </label>
         </div>
         <div className="inputGroup">
-          <label>ID:</label>
-          <input type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
+          <label>
+            ID:
+            <input type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
+          </label>
         </div>
         <div className="inputGroup">
-          <label>Orientation:</label>
-          <input type="text" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
+          <label>
+            Orientation:
+            <input type="text" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange} />
+          </label>
         </div>
         <div className="inputGroup">
-          <label>Size:</label>
-          <input type="text" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
+          <label>
+            Size:
+            <input type="text" name="size" value={dockFields.size} onChange={handleDockFieldChange} />
+          </label>
         </div>
         <button onClick={exportDockConfig} aria-label="Export Dock Configuration">Export Dock Configuration</button>
       </section>
