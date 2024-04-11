@@ -4,12 +4,6 @@ import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db, auth } from '../../firebaseInit';
 import { getDoc, addDoc, collection } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-
 import '../App.css';
 //import {alwaysOnTopEmitter} from '../../electron/main.ts';
 
@@ -25,7 +19,6 @@ interface SettingsProps {
 
 
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
-  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(false); // State for Always on Top switch
   //--- Dark Mode Functions ---//
   // Correctly initialized useState hook for darkMode
   const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -63,14 +56,13 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
 
   const toggleDarkMode = () => {setDarkMode(prev => !prev);};
 
-  const handleDockFieldChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
-    const { name, value } = e.target as HTMLInputElement; // Casting target as HTMLInputElement
+  const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setDockFields(prevState => ({
       ...prevState,
       [name]: value
     }));
   };
-  
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log("Selected color:", e.target.value); // Add this to debug
@@ -82,12 +74,6 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   };
 
   //--- Always on top functions ---//
-
-const toggleAlwaysOnTop = () => {
-  setAlwaysOnTop(prev => !prev);
-  // Here you would add your Electron logic to toggle the always on top property
-  // e.g., window.setAlwaysOnTop(alwaysOnTop);
-};
 
   const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
     return localStorage.getItem('alwaysOnTop') === 'true';
@@ -163,32 +149,70 @@ const toggleAlwaysOnTop = () => {
   };
 
   return (
-    <Box className="settings-wrapper">
-      <h1 className='settings-label'>Settings</h1>
-      <FormControlLabel
-        control={<Switch checked={darkMode} onChange={toggleDarkMode} />}
-        label="Dark Mode"
-      />
-      <Box>
-        <h2 className='dock-settings-label'>Dock Configuration</h2>
-        <Box className="dock-settings">
-          <FormControlLabel
-          control={<Switch checked={alwaysOnTop} onChange={toggleAlwaysOnTop} />}
-          label="Always on Top"
-          />
-          <TextField
-            className='mui-input'
-            label="ID"
-            type="text"
-            name="id"
-            value={dockFields.id}
-            onChange={handleDockFieldChange}
-            variant="outlined"
-          />
-        </Box>
-        <Button className='mui-btn' variant="contained" onClick={exportDockConfig}>Export Dock Configuration</Button>
-      </Box>
-    </Box>
+    <div className="settingsContainer">
+      <h1>Settings</h1>
+
+      <section>
+        <h2>Account Settings</h2>
+        <p>Manage account information, change password, etc.</p>
+      </section>
+
+      <section>
+        <h2>Privacy Settings</h2>
+        <p>Manage your data and privacy settings.</p>
+      </section>
+
+      <section>
+        <h2>Appearance</h2>
+        <label>
+          Dark Mode
+          <input type="checkbox" checked={darkMode} onChange={toggleDarkMode} />
+        </label>
+      </section>
+
+      <section>
+        <h2>Always on Top</h2>
+        <label>Keeps the dock open and on top while focused on other pages</label>
+        <br/>
+        <label className="switch">
+           <input title="Always on Top" type="checkbox" checked={alwaysOnTop} onChange={sendToggleOnTopMsg} />
+           <span className="slider round"></span>
+        </label>
+      </section>
+
+      {/* Dock Configuration */}
+      <div style={{ marginTop: '20px' }}>
+        <h2>Dock Configuration</h2>
+        {/* Color Dropdown */}
+        <div>
+          <label>Color:</label>
+          <select title="Color" name="color" value={dockFields.color} onChange={handleColorChange}>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </div>
+        <div>
+          <label>Orientation:</label>
+          <select title="Orientation" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange}>
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select>
+        </div>
+        <div>
+          <label>Size:</label>
+          <select title="Size" name="size" value={dockFields.size} onChange={handleDockFieldChange}>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </div>
+        <div>
+          <label>ID:</label>
+          <input title="ID" type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
+        </div>
+        <button onClick={exportDockConfig}>Export Dock Configuration</button>
+      </div>
+    </div>
   );
 }
 

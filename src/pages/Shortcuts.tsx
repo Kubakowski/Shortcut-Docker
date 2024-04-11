@@ -5,7 +5,6 @@ import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
 import Dock from '../components/Dock';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
-import { Shortcut } from '../types/types.ts'; 
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 type Shortcut = {
@@ -92,7 +91,6 @@ function Shortcuts() {
   return (
     <div className='shortcuts-page-wrapper'>
       <div className='top-dock-wrapper'>
-      <Dock pinnedShortcuts={pinnedShortcuts as Shortcut[]} onUnpin={handleUnpinShortcut} />        
         <Dock />
         {pinnedShortcuts.map((shortcut) => (
           <ShortcutComponent
