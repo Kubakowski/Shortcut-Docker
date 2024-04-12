@@ -1,4 +1,4 @@
-// Settings.tsx
+//Settings.tsx
 import React, { useState, useEffect } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db, auth } from '../../firebaseInit';
@@ -11,24 +11,20 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import '../App.css';
-//const BrowserWindow = require('electron').BrowserWindow;
 
 interface SettingsProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   shortcutDocRef: any; // Consider defining a more specific type
 }
 
-/*function toggleAlwaysOnTop(){
-  let win = BrowserWindow.getFocusedWindow();
-  win?.setAlwaysOnTop(!win.isAlwaysOnTop);
-}*/
-
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
-  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(false); // State for Always on Top switch
-  // Correctly initialized useState hook for darkMode
+  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
+    return localStorage.getItem('alwaysOnTop') === 'true';
+  });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
   });
+
   const [dockFields, setDockFields] = useState({
     color: 'light',
     id: '',
@@ -39,81 +35,34 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const { pinnedShortcuts } = usePinnedShortcuts();
 
   useEffect(() => {
-    // Toggle dark mode class on body element
-    if (darkMode) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }, [darkMode]);
-
-  useEffect(() => {
-    // Retrieve dark mode preference from local storage
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    setDarkMode(isDarkMode);
-  }, []);
-
-  useEffect(() => {
-    // Persist dark mode preference in local storage
+    document.body.classList.toggle('dark', darkMode);
     localStorage.setItem('darkMode', darkMode.toString());
-  }, [darkMode]);
-
-  const toggleDarkMode = () => {setDarkMode(prev => !prev);};
+    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
+  }, [darkMode, alwaysOnTop]);
 
   const handleDockFieldChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
-    const { name, value } = e.target as HTMLInputElement; // Casting target as HTMLInputElement
+    const { name, value } = e.target as HTMLInputElement;
     setDockFields(prevState => ({
       ...prevState,
       [name]: value
     }));
   };
-  
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("Selected color:", e.target.value); // Add this to debug
     const { value } = e.target;
     setDockFields(prevState => ({
       ...prevState,
       color: value
     }));
-};
-
-const toggleAlwaysOnTop = () => {
-  setAlwaysOnTop(prev => !prev);
-  // Here you would add your Electron logic to toggle the always on top property
-  // e.g., window.setAlwaysOnTop(alwaysOnTop);
-};
-
-  const fetchShortcutDoc = async () => {
-    try {
-      const docSnap = await getDoc(shortcutDocRef);
-      if (docSnap.exists()) {
-        const shortcutData = docSnap.data();
-        console.log('Shortcut document data:', shortcutData);
-      } else {
-        console.log('Shortcut document does not exist.');
-      }
-    } catch (error) {
-      console.error('Error fetching shortcut document:', error);
-    }
   };
 
   const exportDockConfig = async () => {
-    console.log("Current color state:", dockFields.color);
-    console.log("Attempting to export dock config...", { auth });
-  
     if (!auth || !auth.currentUser) {
-      console.error("Auth object or currentUser is undefined.", { auth });
       setError('You must be logged in to export the configuration.');
       return;
     }
-  
-    console.log("User is logged in, proceeding with export.");
-  
-    // Map shortcuts to document references
+
     const shortcutsRefs = pinnedShortcuts.map(shortcut => createDocumentReference(db, 'Shortcuts', shortcut.id));
-  
-    // Prepare the dock configuration data
     const dockConfigData = {
       Color: dockFields.color,
       ID: dockFields.id,
@@ -123,13 +72,11 @@ const toggleAlwaysOnTop = () => {
       exportedAt: new Date(),
       userId: auth.currentUser.uid,
     };
-  
+
     try {
-      // Use addDoc to add a new document to the 'Docks' collection
       await addDoc(collection(db, 'Docks'), dockConfigData);
       alert('Dock configuration exported successfully!');
     } catch (error) {
-      console.error('Error exporting dock configuration:', error);
       setError('Error exporting dock configuration');
     }
   };
@@ -138,16 +85,16 @@ const toggleAlwaysOnTop = () => {
     <Box className="settings-wrapper">
       <h1 className='settings-label'>Settings</h1>
       <FormControlLabel
-        control={<Switch checked={darkMode} onChange={toggleDarkMode} />}
+        control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
         label="Dark Mode"
+      />
+      <FormControlLabel
+        control={<Switch checked={alwaysOnTop} onChange={() => setAlwaysOnTop(!alwaysOnTop)} />}
+        label="Always on Top"
       />
       <Box>
         <h2 className='dock-settings-label'>Dock Configuration</h2>
         <Box className="dock-settings">
-          <FormControlLabel
-          control={<Switch checked={alwaysOnTop} onChange={toggleAlwaysOnTop} />}
-          label="Always on Top"
-          />
           <TextField
             className='mui-input'
             label="ID"
@@ -157,14 +104,23 @@ const toggleAlwaysOnTop = () => {
             onChange={handleDockFieldChange}
             variant="outlined"
           />
+          <TextField
+            className='mui-input'
+            label="Color"
+            select
+            SelectProps={{ native: true }}
+            value={dockFields.color}
+            onChange={handleColorChange}
+            variant="outlined"
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </TextField>
+          <Button className='mui-btn' variant="contained" onClick={exportDockConfig}>Export Dock Configuration</Button>
         </Box>
-        <Button className='mui-btn' variant="contained" onClick={exportDockConfig}>Export Dock Configuration</Button>
       </Box>
     </Box>
   );
 }
-
-
-
 
 export default Settings;

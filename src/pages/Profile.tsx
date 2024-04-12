@@ -1,4 +1,4 @@
-// Profile.tsx
+//Profile.tsx
 import { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, DocumentReference, DocumentData } from 'firebase/firestore';
 import { db } from '../../firebaseInit';
@@ -7,7 +7,7 @@ import { TextField, Button, Box, Typography, CircularProgress } from '@mui/mater
 import '../App.css';
 
 type User = {
-  dockConfig: DocumentReference<DocumentData> | null; // Initialize as null
+  dockConfig: DocumentReference<DocumentData> | null;
   email: string;
   id: string;
   username: string;
@@ -18,7 +18,7 @@ function Profile({ auth }: { auth: Auth }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [newUser, setNewUser] = useState<User>({
-    dockConfig: null, // Initialize as null
+    dockConfig: null,
     email: '',
     id: '',
     username: '',
@@ -57,9 +57,7 @@ function Profile({ auth }: { auth: Auth }) {
     try {
       const usersCollection = collection(db, 'Users');
       const snapshot = await getDocs(usersCollection);
-      const fetchedUsers = snapshot.docs.map(
-        doc => ({ id: doc.id, ...doc.data() } as User)
-      );
+      const fetchedUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
       setUsers(fetchedUsers);
       setError(null);
     } catch (error) {
@@ -78,7 +76,7 @@ function Profile({ auth }: { auth: Auth }) {
     try {
       await addDoc(collection(db, 'Users'), newUser);
       fetchUsers();
-      setNewUser({ dockConfig: null, email: '', id: '', username: '' }); // Reset newUser state
+      setNewUser({ dockConfig: null, email: '', id: '', username: '' });
     } catch (error) {
       console.error('Error adding user:', error);
       setError('Error adding user');
@@ -95,6 +93,12 @@ function Profile({ auth }: { auth: Auth }) {
 
   return (
     <Box className='profile-wrapper'>
+      <Typography variant="h4" gutterBottom>Users</Typography>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>{user.username}</li>
+        ))}
+      </ul>
       <Typography variant="h4" gutterBottom>Login</Typography>
       <Box className='input-wrapper'>
         <TextField
@@ -168,4 +172,5 @@ function Profile({ auth }: { auth: Auth }) {
     </Box>
   );
 }
+
 export default Profile;
