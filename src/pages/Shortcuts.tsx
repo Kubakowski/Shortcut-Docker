@@ -5,7 +5,16 @@ import { db } from '../../firebaseInit';
 import ShortcutComponent from '../components/Shortcut';
 import Dock from '../components/Dock';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
-import { Shortcut } from '../types/types.ts'; 
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
+type Shortcut = {
+  id: string;
+  action: string;
+  Keys: string;
+  execute: () => void;
+  IconPath?: string;
+};
+
 function Shortcuts() {
   const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,20 +23,33 @@ function Shortcuts() {
 
   const fetchShortcuts = async () => {
     try {
+      const storage = getStorage(); // Initializes Firebase Storage
       const shortcutsCollection = collection(db, 'Shortcuts');
       const snapshot = await getDocs(shortcutsCollection);
-      const fetchedShortcuts = snapshot.docs.map(doc => {
+      const fetchedShortcutsPromises = snapshot.docs.map(async (doc) => {
         const data = doc.data();
+        let iconUrl = await (async () => {
+          if (data.IconPath && data.IconPath.startsWith('gs://')) {
+            const storageRef = ref(storage, data.IconPath);
+            try {
+              return await getDownloadURL(storageRef);
+            } catch (error) {
+              console.error(`Error fetching icon URL for ${doc.id}:`, error);
+              return 'defaultIconURL'; // Use an actual URL as a fallback
+            }
+          } else {
+            return data.IconPath || 'defaultIconURL';
+          }
+        })();
         return {
           id: doc.id,
           action: data.action || '',
           Keys: data.Keys || '',
-          execute: () => {
-            console.log(`Executing action: ${data.action}`);
-          }
+          execute: () => console.log(`Executing action: ${data.action}`),
+          IconPath: iconUrl,
         };
       });
-      console.log('Fetched shortcuts:', fetchedShortcuts);
+      const fetchedShortcuts = await Promise.all(fetchedShortcutsPromises);
       setShortcuts(fetchedShortcuts);
       setLoading(false);
     } catch (error) {
@@ -51,7 +73,7 @@ function Shortcuts() {
   const handlePinShortcut = (shortcut: Shortcut) => {
     addPinnedShortcut(shortcut);
   };
-  
+
   const handleUnpinShortcut = (shortcutId: string) => {
     removePinnedShortcut(shortcutId);
   };
@@ -59,7 +81,7 @@ function Shortcuts() {
   return (
     <div className='shortcuts-page-wrapper'>
       <div className='top-dock-wrapper'>
-      <Dock pinnedShortcuts={pinnedShortcuts as Shortcut[]} onUnpin={handleUnpinShortcut} />        
+        <Dock pinnedShortcuts={pinnedShortcuts as Shortcut[]} onUnpin={handleUnpinShortcut} />
       </div>
       <hr className='shortcuts-divider' />
       <div className='individual-shortcuts-wrapper'>
@@ -68,6 +90,7 @@ function Shortcuts() {
             key={shortcut.id}
             action={shortcut.action}
             Keys={shortcut.Keys}
+            IconPath={shortcut.IconPath} // Ensure IconPath is passed correctly
             onPin={() => handlePinShortcut(shortcut)}
             onUnpin={() => {}}
             isPinned={false}

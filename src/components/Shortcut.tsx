@@ -46,15 +46,15 @@ const translateKeys = (keys: string) => {
 };
 
 
-
 type ShortcutComponentProps = {
   action: string;
   Keys: string;
+  IconPath?: string;
   onPin: () => void;
   onUnpin: () => void;
   isPinned: boolean;
-  onClick: () => void; 
-  isInDock?: boolean; 
+  onClick: () => void;
+  isInDock?: boolean;
 };
 
 const triggerShortcut = (keys: string) => {
@@ -67,49 +67,64 @@ const triggerShortcut = (keys: string) => {
   }, 500); 
 };
 
-const ShortcutComponent: React.FC<ShortcutComponentProps> = ({ action, Keys, onPin, onUnpin, isPinned, onClick, isInDock = false }) => {
-  const Wrapper = isInDock ? 'div' : React.Fragment;
-  const wrapperProps = isInDock ? { className: 'dock-shortcut-wrapper' } : {};
-  const readableKeys = translateKeys(Keys); 
-
+const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
+  action,
+  Keys,
+  IconPath,
+  onPin,
+  onUnpin,
+  isPinned,
+  onClick,
+  isInDock = false,
+}) => {
+  const readableKeys = translateKeys(Keys);
 
   const handleDoClick = () => {
     triggerShortcut(Keys);
-    console.log('Do button clicked'); 
-    onClick(); 
+    onClick();
   };
 
- return (
-    <Wrapper {...wrapperProps}>
-      <div className={isInDock ? 'dock-shortcut-inner' : 'shortcut-wrapper'}>
-        {isInDock ? (
-              <Button onClick={handleDoClick} className='docked-shortcut'>
-                {Keys}
-                <Tooltip title="Unpin from Dock">
-                  <img src={pinIcon} alt="Unpin" className="pin-icon" onClick={(e) => { e.stopPropagation(); onUnpin(); }}/>
-                </Tooltip>
-              </Button> 
-       ) : (
-          <>
-            <h3 className='shortcut-name'>{action}</h3>
-            <p className='shortcut-keys'>{readableKeys}</p> 
-            <div>
-              <Tooltip title="Run Action">
-                <Button className='shortcut-action-btn' onClick={handleDoClick}>
-                  <img className='shortcut-action-img' src={executeIcon} alt="Execute" />
-                </Button>
-              </Tooltip>
-              <Tooltip title="Pin to Dock">
-                <Button className='shortcut-action-btn' onClick={onPin}>
-                  <img className='shortcut-action-img' src={pinIcon} alt="Pin" />
-                </Button>
-              </Tooltip>
-            </div>
-          </>
-        )}
+  if (isInDock) {
+    // Return the docked version of the shortcut
+    return (
+      <div className='dock-shortcut-wrapper'>
+        <Button onClick={handleDoClick} className='docked-shortcut'>
+          {Keys}
+          <Tooltip title="Unpin from Dock">
+            <img src={pinIcon} alt="Unpin" className="pin-icon" onClick={(e) => { e.stopPropagation(); onUnpin(); }}/>
+          </Tooltip>
+        </Button>
       </div>
-    </Wrapper>
-  );
+    );
+  } else {
+    // Return the non-docked version of the shortcut
+    return (
+      <div className='shortcut-wrapper'>
+        {IconPath && <img src={IconPath} alt={`${action} Icon`} className="shortcut-icon"/>}
+        <h3 className='shortcut-name'>{action}</h3>
+        <p className='shortcut-keys'>{readableKeys}</p>
+        <div>
+          <Tooltip title="Run Action">
+            <Button className='shortcut-action-btn' onClick={handleDoClick}>
+              <img className='shortcut-action-img' src={executeIcon} alt="Execute" />
+            </Button>
+          </Tooltip>
+          {isPinned ? (
+            <Tooltip title="Unpin from Dock">
+              <Button className='shortcut-action-btn' onClick={onUnpin}>
+                <img className='shortcut-action-img' src={pinIcon} alt="Unpin" />
+              </Button>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Pin to Dock">
+              <Button className='shortcut-action-btn' onClick={onPin}>
+                <img className='shortcut-action-img' src={pinIcon} alt="Pin" />
+              </Button>
+            </Tooltip>
+          )}
+        </div>
+      </div>
+    );
+  }
 };
-
 export default ShortcutComponent;
