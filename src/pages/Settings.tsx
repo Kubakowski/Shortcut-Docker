@@ -1,26 +1,26 @@
-// Settings.tsx
+//Settings.tsx
 import React, { useState, useEffect } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db, auth } from '../../firebaseInit';
 import { getDoc, addDoc, collection } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
-import '../App.css';
-//import {alwaysOnTopEmitter} from '../../electron/main.ts';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-//const { ipcRenderer } = require('electron');
-//import { ipcRenderer } from 'electron';
-//const { ipcMain } = require('electron');
-//const BrowserWindow = require('electron').BrowserWindow;
+import '../App.css';
 
 interface SettingsProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   shortcutDocRef: any; // Consider defining a more specific type
 }
 
-
 function Settings({ setError, shortcutDocRef }: SettingsProps) {
-  //--- Dark Mode Functions ---//
-  // Correctly initialized useState hook for darkMode
+  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
+    return localStorage.getItem('alwaysOnTop') === 'true';
+  });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
   });
@@ -35,29 +35,13 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const { pinnedShortcuts } = usePinnedShortcuts();
 
   useEffect(() => {
-    // Toggle dark mode class on body element
-    if (darkMode) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }, [darkMode]);
-
-  useEffect(() => {
-    // Retrieve dark mode preference from local storage
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    setDarkMode(isDarkMode);
-  }, []);
-
-  useEffect(() => {
-    // Persist dark mode preference in local storage
+    document.body.classList.toggle('dark', darkMode);
     localStorage.setItem('darkMode', darkMode.toString());
-  }, [darkMode]);
+    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
+  }, [darkMode, alwaysOnTop]);
 
-  const toggleDarkMode = () => {setDarkMode(prev => !prev);};
-
-  const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+  const handleDockFieldChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
+    const { name, value } = e.target as HTMLInputElement;
     setDockFields(prevState => ({
       ...prevState,
       [name]: value
@@ -65,7 +49,6 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("Selected color:", e.target.value); // Add this to debug
     const { value } = e.target;
     setDockFields(prevState => ({
       ...prevState,
@@ -73,61 +56,13 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     }));
   };
 
-  //--- Always on top functions ---//
-
-  const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
-    return localStorage.getItem('alwaysOnTop') === 'true';
-  });
-
-  useEffect(() => {
-    // Retrieve alwaysOnTop preference from local storage
-    const isAlwaysOnTop = localStorage.getItem('alwaysOnTop') === 'true';
-    setAlwaysOnTop(isAlwaysOnTop);
-  }, []);
-
-  useEffect(() => {
-    // Persist alwaysOnTop preference in local storage
-    localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
-  }, [alwaysOnTop]);
-
-  const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    console.log(`${e.target.title} switch CLICKED! toggle is ${localStorage.getItem('alwaysOnTop') === 'true'}`);
-    
-    setAlwaysOnTop(prev => !prev);
-    window.electronAPI.send('trigger-toggle-on-top', true);
-    //console.log(e.target.title, ': toggling alwaysOnTop');
-  };
-  
-  const fetchShortcutDoc = async () => {
-    try {
-      const docSnap = await getDoc(shortcutDocRef);
-      if (docSnap.exists()) {
-        const shortcutData = docSnap.data();
-        console.log('Shortcut document data:', shortcutData);
-      } else {
-        console.log('Shortcut document does not exist.');
-      }
-    } catch (error) {
-      console.error('Error fetching shortcut document:', error);
-    }
-  };
-
   const exportDockConfig = async () => {
-    console.log("Current color state:", dockFields.color);
-    console.log("Attempting to export dock config...", { auth });
-  
     if (!auth || !auth.currentUser) {
-      console.error("Auth object or currentUser is undefined.", { auth });
       setError('You must be logged in to export the configuration.');
       return;
     }
-  
-    console.log("User is logged in, proceeding with export.");
-  
-    // Map shortcuts to document references
+
     const shortcutsRefs = pinnedShortcuts.map(shortcut => createDocumentReference(db, 'Shortcuts', shortcut.id));
-  
-    // Prepare the dock configuration data
     const dockConfigData = {
       Color: dockFields.color,
       ID: dockFields.id,
@@ -137,85 +72,55 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
       exportedAt: new Date(),
       userId: auth.currentUser.uid,
     };
-  
+
     try {
-      // Use addDoc to add a new document to the 'Docks' collection
       await addDoc(collection(db, 'Docks'), dockConfigData);
       alert('Dock configuration exported successfully!');
     } catch (error) {
-      console.error('Error exporting dock configuration:', error);
       setError('Error exporting dock configuration');
     }
   };
 
   return (
-    <div className="settingsContainer">
-      <h1>Settings</h1>
-
-      <section>
-        <h2>Account Settings</h2>
-        <p>Manage account information, change password, etc.</p>
-      </section>
-
-      <section>
-        <h2>Privacy Settings</h2>
-        <p>Manage your data and privacy settings.</p>
-      </section>
-
-      <section>
-        <h2>Appearance</h2>
-        <label>
-          Dark Mode
-          <input type="checkbox" checked={darkMode} onChange={toggleDarkMode} />
-        </label>
-      </section>
-
-      <section>
-        <h2>Always on Top</h2>
-        <label>Keeps the dock open and on top while focused on other pages</label>
-        <br/>
-        <label className="switch">
-           <input title="Always on Top" type="checkbox" checked={alwaysOnTop} onChange={sendToggleOnTopMsg} />
-           <span className="slider round"></span>
-        </label>
-      </section>
-
-      {/* Dock Configuration */}
-      <div style={{ marginTop: '20px' }}>
-        <h2>Dock Configuration</h2>
-        {/* Color Dropdown */}
-        <div>
-          <label>Color:</label>
-          <select title="Color" name="color" value={dockFields.color} onChange={handleColorChange}>
+    <Box className="settings-wrapper">
+      <h1 className='settings-label'>Settings</h1>
+      <FormControlLabel
+        control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
+        label="Dark Mode"
+      />
+      <FormControlLabel
+        control={<Switch checked={alwaysOnTop} onChange={() => setAlwaysOnTop(!alwaysOnTop)} />}
+        label="Always on Top"
+      />
+      <Box>
+        <h2 className='dock-settings-label'>Dock Configuration</h2>
+        <Box className="dock-settings">
+          <TextField
+            className='mui-input'
+            label="ID"
+            type="text"
+            name="id"
+            value={dockFields.id}
+            onChange={handleDockFieldChange}
+            variant="outlined"
+          />
+          <TextField
+            className='mui-input'
+            label="Color"
+            select
+            SelectProps={{ native: true }}
+            value={dockFields.color}
+            onChange={handleColorChange}
+            variant="outlined"
+          >
             <option value="light">Light</option>
             <option value="dark">Dark</option>
-          </select>
-        </div>
-        <div>
-          <label>Orientation:</label>
-          <select title="Orientation" name="orientation" value={dockFields.orientation} onChange={handleDockFieldChange}>
-            <option value="portrait">Portrait</option>
-            <option value="landscape">Landscape</option>
-          </select>
-        </div>
-        <div>
-          <label>Size:</label>
-          <select title="Size" name="size" value={dockFields.size} onChange={handleDockFieldChange}>
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-          </select>
-        </div>
-        <div>
-          <label>ID:</label>
-          <input title="ID" type="text" name="id" value={dockFields.id} onChange={handleDockFieldChange} />
-        </div>
-        <button onClick={exportDockConfig}>Export Dock Configuration</button>
-      </div>
-    </div>
+          </TextField>
+          <Button className='mui-btn' variant="contained" onClick={exportDockConfig}>Export Dock Configuration</Button>
+        </Box>
+      </Box>
+    </Box>
   );
 }
-
-
 
 export default Settings;

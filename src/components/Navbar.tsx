@@ -9,15 +9,12 @@ function Navbar() {
 
   return (
     <div className='navbar-wrapper'>
-      {/* Profile Image as Link */}
-      <div className='profile-wrapper'>
+      {/* Navigation Options */}
+      <div className='tabs-wrapper'>
+        <div className='nav-btn-wrapper'>
         <Button onClick={() => navigate("/profile")}>
           <img src={profileIcon} alt="Profile" />
         </Button>
-      </div>
-      {/* Navigation Options */}
-      <div className='tabs-wrapper'>
-        <div className='nav-btn-wrapper' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
           <Button onClick={() => navigate("/shortcuts")}>
             <img src={pinIcon} alt="Shortcuts" />
           </Button>
