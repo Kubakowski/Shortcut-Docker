@@ -16,7 +16,8 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   //--- Font Change Functions ---//
   const [fontFamily, setFontFamily] = useState(() => localStorage.getItem('fontFamily') || 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif');
   const [fontSize, setFontSize] = useState(() => localStorage.getItem('fontSize') || 'medium');
-  const [isComicSans, setIsComicSans] = useState(false);
+  const [isComicSans, setIsComicSans] = useState(() => localStorage.getItem('isComicSans') === 'true'); 
+
   
   useEffect(() => {
     document.body.style.fontFamily = fontFamily;
@@ -28,6 +29,10 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     document.body.style.fontSize = fontSizeValue;
     localStorage.setItem('fontSize', fontSize);
   }, [fontSize]);
+
+  useEffect(() => {
+    localStorage.setItem('isComicSans', isComicSans.toString());
+  }, [isComicSans]);
 
   const toggleFontFamily = () => {
     setIsComicSans(prev => !prev);
@@ -55,15 +60,27 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const [highContrastMode, setHighContrastMode] = useState(() => localStorage.getItem('highContrastMode') === 'true');
 
   const toggleDarkMode = () => {
-    setDarkMode(prev => !prev);
-    //setHighContrastMode(false);
-  };
 
+    if (!darkMode) {
+      setDarkMode(true);
+      setHighContrastMode(false);
+    }
+    else if (darkMode) {
+      setDarkMode(false);
+    }
+  };
+  
   const toggleHighContrastMode = () => {
-    setHighContrastMode(prev => !prev);
-    //setDarkMode(false);
-  };
+   if (!highContrastMode) {
+      setHighContrastMode(true);
+      setDarkMode(false); 
+    }
+    else if (highContrastMode) {
+      setHighContrastMode(false);
+    }
 
+  };
+  
   const handleDockFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setDockFields(prevState => ({
@@ -100,7 +117,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   useEffect(() => {
     // Retrieve preferences from local storage
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    const isHighContrastMode = localStorage.getItem('high-contrast') === 'true';
+    const isHighContrastMode = localStorage.getItem('highContrastMode') === 'true';
     const isAlwaysOnTop = localStorage.getItem('alwaysOnTop') === 'true';
     
     setDarkMode(isDarkMode);
@@ -201,17 +218,34 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
 
       <section className="section">
         <h2>Appearance</h2>
-        <label>
-          Dark Mode
-          <input type="checkbox" checked={darkMode} onChange={toggleDarkMode} aria-label="Toggle Dark Mode" />
-        </label>
-        <label>
-          High Contrast Mode
-          <input type="checkbox" checked={highContrastMode} onChange={toggleHighContrastMode} aria-label="Toggle High Contrast Mode" />
-        </label>
-        <button onClick={toggleFontFamily} aria-label={`Toggle Font to ${isComicSans ? 'Default' : 'Comic Sans'}`}>
-          {isComicSans ? 'Use Default Font' : 'Use Dyslexia Friendly Font'}
-        </button>
+        <div>
+          <label>
+            Dark Mode
+            <input type="checkbox" checked={darkMode} onChange={toggleDarkMode} aria-label="Toggle Dark Mode" />
+          </label>
+        </div>
+        <div>
+          <label>
+            High Contrast Mode
+            <input type="checkbox" checked={highContrastMode} onChange={toggleHighContrastMode} aria-label="Toggle High Contrast Mode" />
+          </label>
+        </div>
+        <div>
+          <label>
+            Enable Dyslexia Friendly Font
+            <input type="checkbox" checked={fontFamily === 'Comic Sans MS, Comic Sans, cursive'} onChange={toggleFontFamily} aria-label="Toggle Font" />
+          </label>
+        </div>
+      </section>
+
+      <section className="section">
+        <h4>Font Size</h4>
+        <select value={fontSize} onChange={handleFontSizeChange} aria-label="Select Font Size">
+          <option aria-label="Font Size: Small" value="small">Small</option>
+          <option aria-label="Font Size: Medium" value="medium">Medium</option>
+          <option aria-label="Font Size: Large" value="large">Large</option>
+          <option aria-label="Font Size: Extra" value="xlarge">Extra Large</option>
+        </select>
       </section>
 
       <section>
@@ -224,15 +258,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
         </label>
       </section>
 
-      <section className="section">
-        <h2>Font Size</h2>
-        <select value={fontSize} onChange={handleFontSizeChange} aria-label="Select Font Size">
-          <option aria-label="Font Size: Small" value="small">Small</option>
-          <option aria-label="Font Size: Medium" value="medium">Medium</option>
-          <option aria-label="Font Size: Large" value="large">Large</option>
-          <option aria-label="Font Size: Extra" value="xlarge">Extra Large</option>
-        </select>
-      </section>
+
 
       <section className="section">
         <h2>Dock Configuration</h2>
