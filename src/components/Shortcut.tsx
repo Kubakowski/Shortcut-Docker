@@ -78,14 +78,15 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
   if (isInDock) {
     // Return the docked version of the shortcut
     return (
-      <div className='dock-shortcut-wrapper'>
-        <Button onClick={handleDoClick} className='docked-shortcut'>
-          {/* Add the className "shortcut-icon-img" to this img tag */}
-          <img src={IconPath || 'path_to_default_icon'} alt={action} className="shortcut-icon-img" />
-          <Tooltip title="Unpin from Dock">
-            <img src={pinIcon} alt="Unpin" className="pin-icon" onClick={(e) => { e.stopPropagation(); onUnpin(); }}/>
-          </Tooltip>
-        </Button>
+      <div className='dock-shortcut-inner'>
+        <Tooltip title={action}>
+          <Button onClick={handleDoClick} className='docked-shortcut'>
+            <img src={IconPath || 'path_to_default_icon'} alt={action} className="shortcut-icon-img" />
+            <Tooltip title="Unpin from Dock">
+              <img src={pinIcon} alt="Unpin" className="pin-icon" onClick={(e) => { e.stopPropagation(); onUnpin(); }}/>
+            </Tooltip>
+          </Button>
+        </Tooltip>
       </div>
     );
   } else {

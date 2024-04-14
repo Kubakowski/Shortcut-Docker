@@ -93,12 +93,6 @@ function Profile({ auth }: { auth: Auth }) {
 
   return (
     <Box className='profile-wrapper'>
-      <Typography variant="h4" gutterBottom>Users</Typography>
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>{user.username}</li>
-        ))}
-      </ul>
       <Typography variant="h4" gutterBottom>Login</Typography>
       <Box className='input-wrapper'>
         <TextField
