@@ -80,7 +80,8 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
     return (
       <div className='dock-shortcut-wrapper'>
         <Button onClick={handleDoClick} className='docked-shortcut'>
-          <img src={IconPath || 'path_to_default_icon'} alt={action} className="shortcut-icon" />
+          {/* Add the className "shortcut-icon-img" to this img tag */}
+          <img src={IconPath || 'path_to_default_icon'} alt={action} className="shortcut-icon-img" />
           <Tooltip title="Unpin from Dock">
             <img src={pinIcon} alt="Unpin" className="pin-icon" onClick={(e) => { e.stopPropagation(); onUnpin(); }}/>
           </Tooltip>

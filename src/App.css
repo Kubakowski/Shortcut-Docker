@@ -11,7 +11,7 @@
   --dock-btn-color: rgb(172, 172, 172);
   --big-shortcut-background-color: #222161;
   --big-shortcut-btn-color: #5852af;
-  --dock-background-color: #FFF;
+  --dock-background-color: #5852af;
   --nav-background-color: #222161;
   --nav-background-color2: #394867;
   --highlight-color: #5852af;
@@ -517,6 +517,16 @@ section {
 
 .dock-shortcut-inner:hover {
   transform: scale(1.1); 
+}
+
+.shortcut-icon-img {
+  border: 2px solid black; /* Adds the border around the icon */
+  border-radius: 4px; /* Optional: if you want rounded corners */
+  max-width: 90%; /* Scales the icon down to ensure it doesn't touch the border */
+  max-height: 90%; /* Scales the icon down to ensure it doesn't touch the border */
+  object-fit: contain; /* Ensures the image fits within the border without stretching */
+  padding: 4px; /* Adjust the padding to create more space between the border and the icon */
+  box-sizing: border-box; /* Ensures padding doesn't increase the size of the box */
 }
 
 
