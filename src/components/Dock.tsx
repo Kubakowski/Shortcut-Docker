@@ -60,7 +60,7 @@ function Dock({ pinnedShortcuts, onUnpin }: DockProps) {
           <ShortcutComponent
             key={shortcut.id}
             action={shortcut.action}
-            Keys={shortcut.Keys}
+            IconPath={shortcut.IconPath} // Display IconPath instead of Keys
             onPin={() => {}}
             onUnpin={() => onUnpin(shortcut.id)}
             isPinned={true}

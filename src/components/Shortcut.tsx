@@ -1,4 +1,3 @@
-//Shortcut.tsx
 import React from 'react';
 import Button from '@mui/material/Button'; 
 import pinIcon from '../assets/pin-icon.png';
@@ -24,8 +23,7 @@ const translateKeys = (keys: string) => {
     { key: "\\{F6\\}", replacement: "F6" }, 
     { key: "\\{F7\\}", replacement: "F7" }, 
     { key: "\\{F8\\}", replacement: "F8" }, 
-    { key: "\\{F9\\}", replacement: "F9" }, 
-
+    { key: "\\{F9\\}", replacement: "F9" },
   ];
 
   let readableKeys = keys;
@@ -48,23 +46,13 @@ const translateKeys = (keys: string) => {
 
 type ShortcutComponentProps = {
   action: string;
-  Keys: string;
+  Keys?: string;
   IconPath?: string;
   onPin: () => void;
   onUnpin: () => void;
   isPinned: boolean;
   onClick: () => void;
   isInDock?: boolean;
-};
-
-const triggerShortcut = (keys: string) => {
-  window.electronAPI.send('trigger-shortcut', "!{tab}"); 
-  console.log(`Running shortcut: ${keys}`); 
-  
-  setTimeout(() => {
-    window.electronAPI.send('trigger-shortcut', keys); 
-    window.electronAPI.send('trigger-shortcut', "!{tab}"); 
-  }, 500); 
 };
 
 const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
@@ -77,10 +65,13 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
   onClick,
   isInDock = false,
 }) => {
-  const readableKeys = translateKeys(Keys);
+  // Check if Keys is defined before translating
+  const readableKeys = Keys ? translateKeys(Keys) : ''; // Provide an empty string if Keys is undefined
 
   const handleDoClick = () => {
-    triggerShortcut(Keys);
+    if (Keys) {
+      console.log(`Running shortcut: ${Keys}`); // Ensure Keys is defined before logging
+    }
     onClick();
   };
 
@@ -89,7 +80,7 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
     return (
       <div className='dock-shortcut-wrapper'>
         <Button onClick={handleDoClick} className='docked-shortcut'>
-          {Keys}
+          <img src={IconPath || 'path_to_default_icon'} alt={action} className="shortcut-icon" />
           <Tooltip title="Unpin from Dock">
             <img src={pinIcon} alt="Unpin" className="pin-icon" onClick={(e) => { e.stopPropagation(); onUnpin(); }}/>
           </Tooltip>
@@ -100,7 +91,6 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
     // Return the non-docked version of the shortcut
     return (
       <div className='shortcut-wrapper'>
-        {IconPath && <img src={IconPath} alt={`${action} Icon`} className="shortcut-icon"/>}
         <h3 className='shortcut-name'>{action}</h3>
         <p className='shortcut-keys'>{readableKeys}</p>
         <div>
@@ -127,4 +117,5 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
     );
   }
 };
+
 export default ShortcutComponent;
