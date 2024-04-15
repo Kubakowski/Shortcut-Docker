@@ -34,6 +34,20 @@ function Dock({ pinnedShortcuts, onUnpin }: DockProps) {
     }
   };
 
+const triggerShortcut = (keys: string) => {
+  window.electronAPI.send('trigger-shortcut', "!{tab}");
+  console.log(`Running shortcut: ${keys}`);
+  
+  setTimeout(() => {
+    window.electronAPI.send('trigger-shortcut', keys);
+    window.electronAPI.send('trigger-shortcut', "!{tab}");
+  }, 500);
+};
+
+pinnedShortcuts.forEach(shortcut => {
+  shortcut.execute = () => triggerShortcut(shortcut.Keys);
+});
+
   return (
     <div className='dock-wrapper'>
       <div className='dock-header'>
