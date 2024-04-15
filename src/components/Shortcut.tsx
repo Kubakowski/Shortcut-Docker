@@ -55,6 +55,16 @@ type ShortcutComponentProps = {
   isInDock?: boolean;
 };
 
+const triggerShortcut = (keys: string) => {
+  window.electronAPI.send('trigger-shortcut', "!{tab}");
+  console.log(`Running shortcut: ${keys}`);
+  
+  setTimeout(() => {
+    window.electronAPI.send('trigger-shortcut', keys);
+    window.electronAPI.send('trigger-shortcut', "!{tab}");
+  }, 500);
+};
+
 const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
   action,
   Keys,
@@ -65,14 +75,14 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
   onClick,
   isInDock = false,
 }) => {
-  // Check if Keys is defined before translating
-  const readableKeys = Keys ? translateKeys(Keys) : ''; // Provide an empty string if Keys is undefined
+  const readableKeys = Keys ? translateKeys(Keys) : '';
 
   const handleDoClick = () => {
+    console.log(`Running shortcut: ${Keys}`);
     if (Keys) {
-      console.log(`Running shortcut: ${Keys}`); // Ensure Keys is defined before logging
+      triggerShortcut(Keys); // Execute the shortcut
     }
-    onClick();
+    onClick(); // Additional onClick behavior from parent component
   };
 
   if (isInDock) {
@@ -97,7 +107,7 @@ const ShortcutComponent: React.FC<ShortcutComponentProps> = ({
         <p className='shortcut-keys'>{readableKeys}</p>
         <div>
           <Tooltip title="Run Action">
-            <Button className='shortcut-action-btn' onClick={handleDoClick}>
+            <Button className='shortcut-action-btn' onClick={handleDoClick} >
               <img className='shortcut-action-img' src={executeIcon} alt="Execute" />
             </Button>
           </Tooltip>
