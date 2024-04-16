@@ -1,4 +1,3 @@
-//Settings.tsx
 import React, { useState, useEffect } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db, auth } from '../../firebaseInit';
@@ -9,6 +8,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import FormControl from '@mui/material/FormControl';
 
 import '../App.css';
 
@@ -24,6 +25,15 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('darkMode') === 'true';
   });
+  const [highContrastMode, setHighContrastMode] = useState<boolean>(() => {
+    return localStorage.getItem('highContrastMode') === 'true';
+  });
+  const [comicSans, setComicSans] = useState<boolean>(() => {
+    return localStorage.getItem('comicSans') === 'true';
+  });
+  const [largeText, setLargeText] = useState<boolean>(() => {
+    return localStorage.getItem('largeText') === 'true';
+  });
 
   const [dockFields, setDockFields] = useState({
     color: 'light',
@@ -36,9 +46,15 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
 
   useEffect(() => {
     document.body.classList.toggle('dark', darkMode);
+    document.body.classList.toggle('high-contrast', highContrastMode);
+    document.body.style.fontFamily = comicSans ? 'Comic Sans MS' : 'inherit';
+    document.body.style.fontSize = largeText ? '1.23em' : '1em';
     localStorage.setItem('darkMode', darkMode.toString());
     localStorage.setItem('alwaysOnTop', alwaysOnTop.toString());
-  }, [darkMode, alwaysOnTop]);
+    localStorage.setItem('highContrastMode', highContrastMode.toString());
+    localStorage.setItem('comicSans', comicSans.toString());
+    localStorage.setItem('largeText', largeText.toString());
+  }, [darkMode, alwaysOnTop, highContrastMode, comicSans, largeText]);
 
   const handleDockFieldChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target as HTMLInputElement;
@@ -84,14 +100,34 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
   return (
     <Box className="settings-wrapper">
       <h1 className='settings-label'>Settings</h1>
-      <FormControlLabel
-        control={<Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
-        label="Dark Mode"
-      />
-      <FormControlLabel
-        control={<Switch checked={alwaysOnTop} onChange={() => setAlwaysOnTop(!alwaysOnTop)} />}
-        label="Always on Top"
-      />
+      <FormControl component="fieldset">
+        <FormGroup>
+          <FormControlLabel
+            control={<Switch checked={darkMode} onChange={() => {
+              setDarkMode(!darkMode);
+              if (highContrastMode) setHighContrastMode(false); }} />}
+            label="Dark Mode"
+          />
+          <FormControlLabel
+            control={<Switch checked={highContrastMode} onChange={() => {
+              setHighContrastMode(!highContrastMode);
+              if (darkMode) setDarkMode(false); }} />}
+            label="High Contrast Mode"
+          />
+          <FormControlLabel
+            control={<Switch checked={comicSans} onChange={() => setComicSans(!comicSans)} />}
+            label="Enable Dyslexia Friendly Font"
+          />
+          <FormControlLabel
+            control={<Switch checked={largeText} onChange={() => setLargeText(!largeText)} />}
+            label="Make Dock Text Larger"
+          />
+          <FormControlLabel
+            control={<Switch checked={alwaysOnTop} onChange={() => setAlwaysOnTop(!alwaysOnTop)} />}
+            label="Always on Top"
+          />
+        </FormGroup>
+      </FormControl>
       <Box>
         <h2 className='dock-settings-label'>Dock Configuration</h2>
         <Box className="dock-settings">

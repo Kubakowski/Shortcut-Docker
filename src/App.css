@@ -53,6 +53,19 @@ body.trianopia {
 }
 
 
+body.high-contrast {
+
+  --background-color: #fff; 
+  --dock-btn-color: #fff; 
+  --big-shortcut-background-color: #000; 
+  --big-shortcut-btn-color: #fff; 
+  --dock-background-color: #fff; 
+  --nav-background-color: #000; 
+  --nav-background-color2: #333; 
+  --highlight-color: #fff; 
+  --text-color: #000; 
+}
+
 /****************************** START OF NAVBAR STYLES ******************************/
 
 .navbar-wrapper {
