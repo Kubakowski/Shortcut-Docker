@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePinnedShortcuts } from '../../PinnedShortcutsContext';
 import { db, auth } from '../../firebaseInit';
-import { getDoc, addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import createDocumentReference from '../../createDocumentReference';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -18,7 +18,7 @@ interface SettingsProps {
   shortcutDocRef: any; // Consider defining a more specific type
 }
 
-function Settings({ setError, shortcutDocRef }: SettingsProps) {
+function Settings({ setError }: SettingsProps) {
   const [alwaysOnTop, setAlwaysOnTop] = useState<boolean>(() => {
     return localStorage.getItem('alwaysOnTop') === 'true';
   });
@@ -56,6 +56,14 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     localStorage.setItem('largeText', largeText.toString());
   }, [darkMode, alwaysOnTop, highContrastMode, comicSans, largeText]);
 
+  const sendToggleOnTopMsg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value, " CLICKED!");
+    setAlwaysOnTop(!alwaysOnTop);
+    window.electronAPI.send('trigger-toggle-on-top', true);
+    console.log(e.target.title, ': toggling alwaysOnTop');
+  };
+  
+
   const handleDockFieldChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target as HTMLInputElement;
     setDockFields(prevState => ({
@@ -64,7 +72,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
     }));
   };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value } = e.target;
     setDockFields(prevState => ({
       ...prevState,
@@ -123,7 +131,7 @@ function Settings({ setError, shortcutDocRef }: SettingsProps) {
             label="Make Dock Text Larger"
           />
           <FormControlLabel
-            control={<Switch checked={alwaysOnTop} onChange={() => setAlwaysOnTop(!alwaysOnTop)} />}
+            control={<Switch checked={alwaysOnTop} onChange={sendToggleOnTopMsg} />}
             label="Always on Top"
           />
         </FormGroup>

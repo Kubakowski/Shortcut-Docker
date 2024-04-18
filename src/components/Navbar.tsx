@@ -15,7 +15,7 @@ function Navbar() {
         <Button onClick={() => navigate("/profile")}>
           <img src={profileIcon} alt="Profile" />
         </Button>
-          <Button onClick={() => navigate("/shortcuts")}>
+          <Button onClick={() => navigate("/")}>
             <img src={pinIcon} alt="Shortcuts" />
           </Button>
           <Button onClick={() => navigate("/settings")}>
