@@ -18,7 +18,7 @@ function App() {
           <PinnedShortcutsProvider>
             <Routes>
               <Route path="/profile" element={<Profile auth={auth} />} />
-              <Route path="/shortcuts" element={<Shortcuts />} />
+              <Route path="/" element={<Shortcuts />} />
               <Route path="/settings" element={<Settings auth={undefined} setError={function (value: SetStateAction<string | null>): void {
                 throw new Error('Function not implemented.');
               } } shortcutDocRef={undefined} />} />
